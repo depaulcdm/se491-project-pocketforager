@@ -9,3 +9,6 @@ animation software, and my current workflows include heavy use of java and pytho
 
 ### Aaron Seo
 My name is Aaron Seo.  I'm a graduate student with a major in Computer Science at DePaul.  I'm interested in software development and mobile application development with knowledge in java and python language.
+
+### Marina Ljuboja
+Hi I'm Marina and I'm a Software Engineering graduate student! I'm on my last quarter here at DePaul and I'm a full-time student. My hobbies are gardening and biking.
