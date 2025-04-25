@@ -12,3 +12,6 @@ My name is Aaron Seo.  I'm a graduate student with a major in Computer Science a
 
 ### Marina Ljuboja
 Hi I'm Marina and I'm a Software Engineering graduate student! I'm on my last quarter here at DePaul and I'm a full-time student. My hobbies are gardening and biking.
+
+### Naveen Kumar Chava
+Hello, my name is Naveen. I am currently pursuing a Master's degree in Computer Science at DePaul University. I have a strong interest in software development and a solid foundation in Java programming.
