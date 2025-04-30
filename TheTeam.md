@@ -20,6 +20,7 @@ Hello, my name is Naveen. I am currently pursuing a Master's degree in Computer 
 
 ### Technical Completion
 -Code must be fully written, peer-reviewed, merged, and build successfully.
+
 -Feature must pass functional validation against acceptance criteria through manual or unit testing.
 
 ### UI and UX Standards 
