@@ -28,7 +28,9 @@ public class GetPlantDataVolley {
 
         Uri.Builder buildURL = Uri.parse(url).buildUpon();
         buildURL.appendQueryParameter("key", "sk-0T7n681a331e6f78b10272");
+        buildURL.appendQueryParameter("edible", "1");
         String urlToUse = buildURL.build().toString();
+
 
         Response.Listener<JSONObject> listener = response -> {
             try {
