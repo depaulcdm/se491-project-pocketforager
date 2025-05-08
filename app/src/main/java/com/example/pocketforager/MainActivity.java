@@ -39,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void acceptPlants(ArrayList<Plants> Plants){
         this.Plants.addAll(Plants);
+        System.out.println("Plants: " + Plants.size());
+        for (Plants plant : Plants) {
+            System.out.println("ID: " + plant.getID());
+            System.out.println("Common Name: " + plant.getCommonName());
+            System.out.println("Scientific Name: " + plant.getScientificName());
+            System.out.println("Other Name: " + plant.getOtherName());
+            System.out.println("Image URL: " + plant.getImageURL());
+        }
+
 
 
     }
