@@ -2,6 +2,9 @@ package com.example.pocketforager;
 
 import android.os.Bundle;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -44,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
         GetPlantDataVolley.downloadPlants(this,"");
 
         setContentView(R.layout.activity_main);
+
+        // for dedugging purposes
+        Log.d("MainActivity", "Looking for nav_host_fragment in activity_main");
+        View maybeHost = findViewById(R.id.nav_host_fragment);
+        Log.d("MainActivity", "findViewById: " + maybeHost);
 
         // This is for basic navigation
         NavHostFragment navHostFragment =
