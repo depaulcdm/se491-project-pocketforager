@@ -37,10 +37,18 @@ android {
 dependencies {
 
     implementation(libs.room.common.jvm)
-    val room_version = "2.7.1"
+    val room_version = "2.7.1" // for local database
 
+    val navVersion = "2.8.8" // for basic navigation
+
+    //for basic navigation
+    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
+
+    //for local database
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
