@@ -1,5 +1,6 @@
 package com.example.pocketforager;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pocketforager.databinding.ActivityMainBinding;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private ArrayList<Plants> Plants = new ArrayList<>();
+    private PlantAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void acceptPlants(ArrayList<Plants> Plants){
         this.Plants.addAll(Plants);
         System.out.println("Plants: " + Plants.size());
@@ -59,6 +63,13 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Other Name: " + plant.getOtherName());
             System.out.println("Image URL: " + plant.getImageURL());
             System.out.println("------------------");
+        }
+
+        if(!Plants.isEmpty()){
+            mAdapter = new PlantAdapter(Plants,this);
+            binding.searchResults.setAdapter(mAdapter);
+            binding.searchResults.setLayoutManager(new LinearLayoutManager(this));
+            mAdapter.notifyDataSetChanged();
         }
 
 
