@@ -1,15 +1,6 @@
 package com.example.pocketforager;
 
 import android.os.Bundle;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,11 +12,7 @@ import com.example.pocketforager.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 
-
-
 public class MainActivity extends AppCompatActivity {
-
-    private NavController navController;
 
     private ActivityMainBinding binding;
     private ArrayList<Plants> Plants = new ArrayList<>();
@@ -46,21 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
         GetPlantDataVolley.downloadPlants(this,"");
 
-        setContentView(R.layout.activity_main);
-
-        // for dedugging purposes
-        Log.d("MainActivity", "Looking for nav_host_fragment in activity_main");
-        View maybeHost = findViewById(R.id.nav_host_fragment);
-        Log.d("MainActivity", "findViewById: " + maybeHost);
-
-        // This is for basic navigation
-        NavHostFragment navHostFragment =
-                (NavHostFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.nav_host_fragment);
-        navController = navHostFragment.getNavController();
-
-        // This is connecting ActionBar to NavController
-        NavigationUI.setupActionBarWithNavController(this, navController);
 
 
     }
@@ -78,12 +50,4 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        // This is the up button
-        return navController.navigateUp() || super.onSupportNavigateUp();
-    }
 }
-
