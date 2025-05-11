@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">PocketForager</string>
+    <string name="plant_photo">Plant photo or placeholder</string>
+
 </resources>
