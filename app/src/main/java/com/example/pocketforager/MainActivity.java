@@ -1,18 +1,29 @@
 package com.example.pocketforager;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.Network;
 import android.os.Bundle;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pocketforager.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
+
+    private ConnectivityManager connectivityManager;
 
     private ActivityMainBinding binding;
     private ArrayList<Plants> Plants = new ArrayList<>();
@@ -24,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        connectivityManager  = getSystemService(ConnectivityManager.class);
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -31,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        GetPlantDataVolley.downloadPlants(this,"");
+        //GetPlantDataVolley.downloadPlants(this,"");
 
 
 
@@ -46,9 +58,59 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Scientific Name: " + plant.getScientificName());
             System.out.println("Other Name: " + plant.getOtherName());
             System.out.println("Image URL: " + plant.getImageURL());
+            System.out.println("------------------");
         }
 
 
 
+    }
+
+    public void search(View view) {
+        String searchQuery = Objects.requireNonNull(binding.SearchTextBar.getText()).toString();
+        if (searchQuery.isEmpty()) {
+            return;
+        }
+        if (searchQuery.length() < 3) {
+            showAlertDialog("Search string too short", "Please try a longer search string.");
+            return;
+        }
+
+        if (!isNetworkAvailable()) {
+            showAlertDialog("No Connection", "No network connection available. Cannot contact Art Institute API.");
+            return;
+        }
+
+        GetPlantDataVolley.downloadPlants(this, searchQuery);
+        // binding.SearchTextBar.setText("");
+
+
+    }
+
+        private void showAlertDialog(String title, String message) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(title)
+                    .setMessage(message)
+                    .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                    .show();
+        }
+
+
+        public void clearSearch (View v){
+            binding.SearchTextBar.setText("");
+
+        }
+
+
+        public void dismissKeyboard (View v){
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+        }
+
+
+    private boolean isNetworkAvailable() {
+        Network currentNetwork = connectivityManager.getActiveNetwork();
+        return currentNetwork != null;
     }
 }
