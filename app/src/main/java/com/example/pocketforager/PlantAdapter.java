@@ -47,13 +47,13 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
             p.setID(plant.getID());
             p.setCommonName(plant.getCommonName());
 
-            List<String> sciList    = plant.getScientificName();
-            String       sci        = (sciList != null && !sciList.isEmpty())
+            List<String> sciList = plant.getScientificName();
+            String sci = (sciList != null && !sciList.isEmpty())
                     ? sciList.get(0) : "—";
             p.setScientificName(sci);
 
             List<String> otherList = plant.getOtherName();
-            String       other     = (otherList != null && !otherList.isEmpty())
+            String other = (otherList != null && !otherList.isEmpty())
                     ? TextUtils.join(", ", otherList) : "—";
             p.setOtherName(other);
 
