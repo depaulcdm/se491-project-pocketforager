@@ -18,8 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GetPlantDataVolley {
-    private static String API = "sk-0vim681b5258c92e110289";
-
+    private static String API = "sk-0T7n681a331e6f78b10272";
     private static String url ="https://perenual.com/api/v2/species-list";
     private static final String TAG = "PlantVolley";
 
@@ -28,7 +27,7 @@ public class GetPlantDataVolley {
 
 
         Uri.Builder buildURL = Uri.parse(url).buildUpon();
-        buildURL.appendQueryParameter("key", "sk-0vim681b5258c92e110289");
+        buildURL.appendQueryParameter("key", "sk-0T7n681a331e6f78b10272");
         buildURL.appendQueryParameter("edible", "1");
         String urlToUse = buildURL.build().toString();
 
@@ -94,20 +93,12 @@ public class GetPlantDataVolley {
 
 
             // Extracting image URLs from default_image object
-            String originalUrl = "";
-            if (!jData.isNull("default_image")) {
-                JSONObject defaultImage = jData.getJSONObject("default_image");
-                if (defaultImage.has("regular_url") && !defaultImage.isNull("regular_url")) {
-                    originalUrl = defaultImage.getString("regular_url");
-                } else {
-                    Log.d(TAG, "No value for regular_url in default_image");
-                }
-            } else {
-                Log.d(TAG, "default_image is null");
-            }
+            JSONObject defaultImage = jData.getJSONObject("default_image");
+            String originalUrl = defaultImage.getString("regular_url");
             Log.d(TAG, originalUrl);
             Plants plant = new Plants(id,commonName,scientificNames,otherNames,originalUrl);
             Plants.add(plant);
+
         }
         mainActivity.acceptPlants(Plants);
 
