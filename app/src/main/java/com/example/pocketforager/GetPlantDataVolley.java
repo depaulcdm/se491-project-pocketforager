@@ -18,8 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GetPlantDataVolley {
-    private static String API = "sk-0vim681b5258c92e110289";
-
+    private static String API = "sk-0T7n681a331e6f78b10272";
     private static String url ="https://perenual.com/api/v2/species-list";
     private static final String TAG = "PlantVolley";
 
@@ -28,9 +27,11 @@ public class GetPlantDataVolley {
 
 
         Uri.Builder buildURL = Uri.parse(url).buildUpon();
-        buildURL.appendQueryParameter("key", "sk-0vim681b5258c92e110289");
+        buildURL.appendQueryParameter("key", "sk-5GzT681c162c2fcf210300");
+        buildURL.appendQueryParameter("q", plantName);
         buildURL.appendQueryParameter("edible", "1");
         String urlToUse = buildURL.build().toString();
+        Log.d(TAG, "URL: " + urlToUse);
 
 
         Response.Listener<JSONObject> listener = response -> {
@@ -108,6 +109,7 @@ public class GetPlantDataVolley {
             Log.d(TAG, originalUrl);
             Plants plant = new Plants(id,commonName,scientificNames,otherNames,originalUrl);
             Plants.add(plant);
+
         }
         mainActivity.acceptPlants(Plants);
 
