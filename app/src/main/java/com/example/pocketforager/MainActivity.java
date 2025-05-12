@@ -1,14 +1,11 @@
 package com.example.pocketforager;
 
-
 import android.annotation.SuppressLint;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,18 +13,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.content.Intent;
-import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.pocketforager.PlantAdapter;
 import com.example.pocketforager.model.Plant;
 import java.util.List;
-
 import com.example.pocketforager.databinding.ActivityMainBinding;
-
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -39,12 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Plants> Plants = new ArrayList<>();
     private PlantAdapter mAdapter;
 
-    DetailsAdapter dAdapter = new DetailsAdapter(Plants, this);
-
-    // for when clicking on the plant to view details page
-    private RecyclerView rvPlants;
-    private PlantAdapter adapter;
-    private List<Plant> plantList = new ArrayList<>();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

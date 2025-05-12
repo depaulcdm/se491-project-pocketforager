@@ -11,7 +11,6 @@ import com.example.pocketforager.databinding.PlantentryBinding;
 import java.util.ArrayList;
 import android.text.TextUtils;
 import java.util.List;
-import com.example.pocketforager.model.Plant;
 
 
 public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
