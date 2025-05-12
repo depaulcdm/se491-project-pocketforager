@@ -2,11 +2,11 @@ package com.example.pocketforager;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.pocketforager.databinding.ActivityDetailsBinding;
 import com.example.pocketforager.model.Plant;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Callback;
 
 public class DetailsPageActivity extends AppCompatActivity {
     public static final String EXTRA_PLANT = "extra_plant";
@@ -19,20 +19,41 @@ public class DetailsPageActivity extends AppCompatActivity {
         binding = ActivityDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Retrieve a Plants, not model.Plant
         Plant plant = (Plant) getIntent().getSerializableExtra(EXTRA_PLANT);
 
+
         if (plant != null) {
-            // Photo logic
             String url = plant.getImageURL();
             if (url != null && !url.isEmpty()) {
+
+                // getting the photo with picasso
                 binding.tvNoPhoto.setVisibility(View.GONE);
-                // e.g. Glide.with(this).load(url).into(binding.imagePlantDetail);
+                Picasso.get()
+                        .load(url)
+                        .placeholder(R.drawable.photo_box_border_rounded)
+                        .into(binding.imagePlant, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                // image was found
+                                binding.tvNoPhoto.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                // if getting the photo didn't work
+                                binding.tvNoPhoto.setVisibility(View.VISIBLE);
+                                binding.imagePlant.setImageDrawable(null);
+                            }
+                        });
+
             } else {
+                // if no url exists
                 binding.tvNoPhoto.setVisibility(View.VISIBLE);
+                binding.imagePlant.setImageDrawable(null);
             }
 
-            // Populate text fields
+
+            // Fill in text fields
             binding.tvPlantName.setText(plant.getCommonName());
             binding.tvScientificName.setText(plant.getScientificName());
             binding.tvOtherName.setText(plant.getOtherName().isEmpty() ? "—" : plant.getOtherName());
