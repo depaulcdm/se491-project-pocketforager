@@ -1,14 +1,11 @@
 package com.example.pocketforager;
 
-import android.content.Intent;
-
 import android.annotation.SuppressLint;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,9 +13,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
+import android.content.Intent;
+import androidx.recyclerview.widget.RecyclerView;
+import com.example.pocketforager.model.Plant;
+import java.util.List;
 import com.example.pocketforager.databinding.ActivityMainBinding;
-
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -29,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private ArrayList<Plants> Plants = new ArrayList<>();
     private PlantAdapter mAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //GetPlantDataVolley.downloadPlants(this,"");
-
 
 
     }
@@ -122,5 +121,12 @@ public class MainActivity extends AppCompatActivity {
     private boolean isNetworkAvailable() {
         Network currentNetwork = connectivityManager.getActiveNetwork();
         return currentNetwork != null;
+    }
+
+    public void openDetails(Plant modelPlant) {
+
+        Intent intent = new Intent(this, DetailsPageActivity.class);
+        intent.putExtra(DetailsPageActivity.EXTRA_PLANT, modelPlant);
+        startActivity(intent);
     }
 }
