@@ -19,7 +19,7 @@ public class DetailsPageActivity extends AppCompatActivity {
         binding = ActivityDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Retrieve a Plants, not model.Plant
+    
         Plant plant = (Plant) getIntent().getSerializableExtra(EXTRA_PLANT);
 
         if (plant != null) {
@@ -27,12 +27,12 @@ public class DetailsPageActivity extends AppCompatActivity {
             String url = plant.getImageURL();
             if (url != null && !url.isEmpty()) {
                 binding.tvNoPhoto.setVisibility(View.GONE);
-                // e.g. Glide.with(this).load(url).into(binding.imagePlantDetail);
+
             } else {
                 binding.tvNoPhoto.setVisibility(View.VISIBLE);
             }
 
-            // Populate text fields
+    
             binding.tvPlantName.setText(plant.getCommonName());
             binding.tvScientificName.setText(plant.getScientificName());
             binding.tvOtherName.setText(plant.getOtherName().isEmpty() ? "—" : plant.getOtherName());
