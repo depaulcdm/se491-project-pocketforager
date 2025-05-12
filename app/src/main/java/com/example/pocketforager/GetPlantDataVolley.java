@@ -27,9 +27,11 @@ public class GetPlantDataVolley {
 
 
         Uri.Builder buildURL = Uri.parse(url).buildUpon();
-        buildURL.appendQueryParameter("key", "sk-0T7n681a331e6f78b10272");
+        buildURL.appendQueryParameter("key", "sk-5GzT681c162c2fcf210300");
+        buildURL.appendQueryParameter("q", plantName);
         buildURL.appendQueryParameter("edible", "1");
         String urlToUse = buildURL.build().toString();
+        Log.d(TAG, "URL: " + urlToUse);
 
 
         Response.Listener<JSONObject> listener = response -> {
@@ -93,8 +95,17 @@ public class GetPlantDataVolley {
 
 
             // Extracting image URLs from default_image object
-            JSONObject defaultImage = jData.getJSONObject("default_image");
-            String originalUrl = defaultImage.getString("regular_url");
+            String originalUrl = "";
+            if (!jData.isNull("default_image")) {
+                JSONObject defaultImage = jData.getJSONObject("default_image");
+                if (defaultImage.has("regular_url") && !defaultImage.isNull("regular_url")) {
+                    originalUrl = defaultImage.getString("regular_url");
+                } else {
+                    Log.d(TAG, "No value for regular_url in default_image");
+                }
+            } else {
+                Log.d(TAG, "default_image is null");
+            }
             Log.d(TAG, originalUrl);
             Plants plant = new Plants(id,commonName,scientificNames,otherNames,originalUrl);
             Plants.add(plant);
