@@ -35,6 +35,8 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
 
         Plants plant = Plants.get(position);
         holder.binding.plantName.setText(plant.getCommonName());
+        // click on plant goes to main activity
+        holder.binding.getRoot().setOnClickListener(v -> mainActivity.openDetails(plant));
 
     }
 
@@ -43,3 +45,4 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
         return Plants.size();
     }
 }
+

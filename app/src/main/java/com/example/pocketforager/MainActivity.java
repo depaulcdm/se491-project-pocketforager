@@ -1,6 +1,5 @@
 package com.example.pocketforager;
 
-import android.content.Intent;
 
 import android.annotation.SuppressLint;
 import android.net.ConnectivityManager;
@@ -17,6 +16,15 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Intent;
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.example.pocketforager.PlantAdapter;
+import com.example.pocketforager.model.Plant;
+import java.util.List;
+
 import com.example.pocketforager.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -29,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private ArrayList<Plants> Plants = new ArrayList<>();
     private PlantAdapter mAdapter;
+
+    // for when clicking on the plant to view details page
+
+    private RecyclerView rvPlants;
+    private PlantAdapter adapter;
+    private List<Plant> plantList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //GetPlantDataVolley.downloadPlants(this,"");
-
 
 
     }
@@ -123,4 +136,11 @@ public class MainActivity extends AppCompatActivity {
         Network currentNetwork = connectivityManager.getActiveNetwork();
         return currentNetwork != null;
     }
+
+    public void openDetails(Plants plant) {
+        Intent intent = new Intent(this, DetailsPageActivity.class);
+        intent.putExtra(DetailsPageActivity.EXTRA_PLANT, plant);
+        startActivity(intent);
+    }
+
 }
