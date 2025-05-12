@@ -8,22 +8,26 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.pocketforager.databinding.ActivityDetailsBinding;
 import com.example.pocketforager.model.Plant;
 
 public class DetailsPageActivity extends AppCompatActivity {
     public static final String EXTRA_PLANT = "extra_plant";
+    private ActivityDetailsBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_details);
+        binding = ActivityDetailsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        ImageView ivPhoto = findViewById(R.id.imagePlantDetail);
-        TextView tvNoPhoto = findViewById(R.id.tvNoPhotoDetail);
-        TextView tvName = findViewById(R.id.tvPlantNameDetail);
-        TextView tvSci = findViewById(R.id.tvScientificNameDetail);
-        TextView tvOther = findViewById(R.id.tvOtherNameDetail);
-        TextView tvEdible = findViewById(R.id.tvEdibleDetail);
+        ImageView ivPhoto = findViewById(R.id.imagePlant);
+        TextView tvNoPhoto = findViewById(R.id.tvNoPhoto);
+        TextView tvName = findViewById(R.id.tvPlantName);
+        TextView tvSci = findViewById(R.id.tvScientificName);
+        TextView tvOther = findViewById(R.id.tvOtherName);
+        TextView tvEdible = findViewById(R.id.tvEdible);
+
 
         Intent intent = getIntent();
         Plant plant = (Plant) intent.getSerializableExtra(EXTRA_PLANT);
