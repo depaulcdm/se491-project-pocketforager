@@ -41,19 +41,16 @@ public class DetailsAdapter
         holder.binding.plantName.setText(oldPlant.getCommonName());
 
         holder.binding.getRoot().setOnClickListener(v -> {
-            // Convert oldPlant → model.Plant
             Plant p = new Plant();
             p.setID(oldPlant.getID());
             p.setCommonName(oldPlant.getCommonName());
 
-            // Take first scientific name, or placeholder
             List<String> sciList = oldPlant.getScientificName();
             String sci = (sciList != null && !sciList.isEmpty())
                     ? sciList.get(0)
                     : "—";
             p.setScientificName(sci);
 
-            // Join other names, or placeholder
             List<String> otherList = oldPlant.getOtherName();
             String other = (otherList != null && !otherList.isEmpty())
                     ? TextUtils.join(", ", otherList)
@@ -63,7 +60,6 @@ public class DetailsAdapter
             p.setImageURL(oldPlant.getImageURL());
             //*********************** p.setEdible(oldPlant.isEdible());
 
-            // Launch details screen
             Intent intent = new Intent(mainActivity, DetailsPageActivity.class);
             intent.putExtra(DetailsPageActivity.EXTRA_PLANT, p);
             mainActivity.startActivity(intent);
