@@ -19,6 +19,7 @@ public class DetailsPageActivity extends AppCompatActivity {
         binding = ActivityDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
         Plant plant = (Plant) getIntent().getSerializableExtra(EXTRA_PLANT);
 
 
@@ -46,14 +47,15 @@ public class DetailsPageActivity extends AppCompatActivity {
                             }
                         });
 
+
             } else {
                 // if no url exists
                 binding.tvNoPhoto.setVisibility(View.VISIBLE);
                 binding.imagePlant.setImageDrawable(null);
             }
 
-
             // Fill in text fields
+
             binding.tvPlantName.setText(plant.getCommonName());
             binding.tvScientificName.setText(plant.getScientificName());
             binding.tvOtherName.setText(plant.getOtherName().isEmpty() ? "—" : plant.getOtherName());
