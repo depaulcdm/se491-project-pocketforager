@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Plants implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final int ID;
     private final String commonName;
     private final List<String> scientificName;
@@ -22,5 +23,6 @@ public class Plants implements Serializable {
     List<String> getScientificName(){return scientificName;}
     List<String> getOtherName(){return otherName;}
     String getImageURL(){return imageURL;}
+
 }
 
