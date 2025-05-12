@@ -1,5 +1,7 @@
 package com.example.pocketforager;
 
+import android.content.Intent;
+
 import android.annotation.SuppressLint;
 import android.net.ConnectivityManager;
 import android.net.Network;
