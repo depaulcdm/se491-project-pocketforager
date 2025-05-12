@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -38,11 +39,12 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Plants> Plants = new ArrayList<>();
     private PlantAdapter mAdapter;
 
-    // for when clicking on the plant to view details page
+    DetailsAdapter dAdapter = new DetailsAdapter(Plants, this);
 
+    // for when clicking on the plant to view details page
     private RecyclerView rvPlants;
     private PlantAdapter adapter;
-    private List<Plant> plantList;
+    private List<Plant> plantList = new ArrayList<>();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,10 +139,10 @@ public class MainActivity extends AppCompatActivity {
         return currentNetwork != null;
     }
 
-    public void openDetails(Plants plant) {
+    public void openDetails(Plant modelPlant) {
+
         Intent intent = new Intent(this, DetailsPageActivity.class);
-        intent.putExtra(DetailsPageActivity.EXTRA_PLANT, plant);
+        intent.putExtra(DetailsPageActivity.EXTRA_PLANT, modelPlant);
         startActivity(intent);
     }
-
 }
