@@ -1,5 +1,6 @@
 package com.example.pocketforager;
-
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -13,12 +14,13 @@ import java.util.ArrayList;
 public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
 
     private final ArrayList<Plants> Plants;
-    private final MainActivity mainActivity;
+    private final Context context;
 
-    public PlantAdapter(ArrayList<com.example.pocketforager.Plants> plants, MainActivity mainActivity) {
-        Plants = plants;
-        this.mainActivity = mainActivity;
+    public PlantAdapter(ArrayList<Plants> plants, Context context) {
+        this.Plants = plants;
+        this.context = context;
     }
+
 
     @NonNull
     @Override
@@ -35,6 +37,11 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
 
         Plants plant = Plants.get(position);
         holder.binding.plantName.setText(plant.getCommonName());
+        holder.binding.getRoot().setOnClickListener(v -> {
+            Intent intent = new Intent(context, PlantDetailsActivity.class);
+            intent.putExtra("plant_data", plant);
+            context.startActivity(intent);
+        });
 
     }
 

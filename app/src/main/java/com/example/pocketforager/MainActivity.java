@@ -58,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
         for (Plants plant : Plants) {
             System.out.println("ID: " + plant.getID());
             System.out.println("Common Name: " + plant.getCommonName());
-            System.out.println("Scientific Name: " + plant.getScientificName());
-            System.out.println("Other Name: " + plant.getOtherName());
+            System.out.println("Scientific Name: " + plant.getScientificNames());
+            System.out.println("Other Name: " + plant.getOtherNames());
             System.out.println("Image URL: " + plant.getImageURL());
             System.out.println("------------------");
         }
@@ -90,8 +90,13 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        GetPlantDataVolley.downloadPlants(this, searchQuery);
-        // binding.SearchTextBar.setText("");
+        GetPlantDataVolley.downloadPlants(this, searchQuery, new PlantCallback() {
+            @Override
+            public void onPlantsDownloaded(ArrayList<Plants> plants) {
+                acceptPlants(plants);
+            }
+        });
+
 
 
     }
