@@ -69,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
             binding.searchResults.setLayoutManager(new LinearLayoutManager(this));
             mAdapter.notifyDataSetChanged();
         }
+        else {
+            showAlertDialog("No Results", "No plants found for the given search term. Please try a different plant name.");
+        }
 
 
 
@@ -90,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         GetPlantDataVolley.downloadPlants(this, searchQuery);
+
         // binding.SearchTextBar.setText("");
 
 
