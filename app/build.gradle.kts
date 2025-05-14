@@ -69,4 +69,6 @@ dependencies {
 
     // Picasso for showing plant picture in details page
     implementation (libs.picasso)
+    implementation (libs.picasso.v271828)
+
 }

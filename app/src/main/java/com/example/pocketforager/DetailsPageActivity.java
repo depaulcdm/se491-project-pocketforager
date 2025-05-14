@@ -1,4 +1,5 @@
 package com.example.pocketforager;
+import static android.content.Intent.getIntent;
 import static androidx.constraintlayout.motion.widget.Debug.getLocation;
 
 import android.widget.Toast;
@@ -19,10 +20,13 @@ import com.example.pocketforager.model.Plant;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Callback;
 
+
 public class DetailsPageActivity extends AppCompatActivity {
     public static final String EXTRA_PLANT = "extra_plant";
-
+    private static final String TAG = "DetailsPageActivity";
     private ActivityDetailsBinding binding;
+    private PlantDetailsVolley detailsVolley;
+    private PlantDetails details;
 
 
     @Override
@@ -41,6 +45,7 @@ public class DetailsPageActivity extends AppCompatActivity {
 
                 // getting the photo with picasso
                 binding.tvNoPhoto.setVisibility(View.GONE);
+
 
                 Picasso.get().load(url).placeholder(R.drawable.photo_box_border_rounded).into(binding.imagePlant, new Callback() {
                     @Override
@@ -103,7 +108,20 @@ public class DetailsPageActivity extends AppCompatActivity {
                 }).start();
             });
 
+            String id = String.valueOf(plant.getID());
+
+            PlantDetailsVolley.downloadPlants(this,id);
+
             //************* binding.tvEdible.setText(plant.isEdible() ? "Yes" : "No");
         }
+    }
+
+    public void acceptDetails(PlantDetails details){
+        this.details = details;
+        Log.d(TAG, "JSON download success");
+    }
+
+    public void failedDetails(){
+        Log.d(TAG, "JSON failed for some reason");
     }
 }
