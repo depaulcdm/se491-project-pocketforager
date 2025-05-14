@@ -104,7 +104,15 @@ public class PlantDetailsVolley {
 
         boolean edible_fruit = response.getBoolean("edible_fruit");
 
+        if(edible_fruit){
+            Log.d(TAG, "fruit is edible");
+        }
+
         boolean edible_leaf = response.getBoolean("edible_leaf");
+
+        if(edible_leaf){
+            Log.d(TAG, "leaf is edible");
+        }
 
         JSONObject defaultImages = response.getJSONObject("default_image");
 
