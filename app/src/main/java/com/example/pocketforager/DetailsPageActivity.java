@@ -119,6 +119,12 @@ public class DetailsPageActivity extends AppCompatActivity {
     public void acceptDetails(PlantDetails details){
         this.details = details;
         Log.d(TAG, "JSON download success");
+        if(details.isEdible_fruit() || details.isEdible_leaf()){
+            binding.tvEdible.setText("Yes");
+        }
+        else{
+            binding.tvEdible.setText("No");
+        }
     }
 
     public void failedDetails(){
