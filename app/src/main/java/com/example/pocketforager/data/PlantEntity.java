@@ -22,6 +22,9 @@ public class PlantEntity {
     @ColumnInfo(name = "found_at")
     public Date foundAt;
 
+    @ColumnInfo(name = "location")
+    public String location;
+
     // I'll add edibility status and more later on
 }
 

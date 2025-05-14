@@ -44,12 +44,12 @@ dependencies {
     val navVersion = "2.8.8" // for basic navigation
 
     //for basic navigation
-    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
-    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 
     //for local database
-    implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
 
     implementation(libs.appcompat)
     implementation(libs.material)
@@ -59,4 +59,14 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    //test implementation
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("androidx.room:room-testing:2.5.2")
+    testImplementation("androidx.test:core:1.5.0")
+
+
+
+    // Picasso for showing plant picture in details page
+    implementation (libs.picasso)
 }

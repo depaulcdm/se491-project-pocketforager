@@ -1,5 +1,6 @@
 [versions]
 agp = "8.9.1"
+core = "1.6.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -7,12 +8,20 @@ appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.9.3"
 constraintlayout = "2.2.0"
+navVersion = "2.8.8"
+picasso = "2.8"
 volley = "1.2.1"
 roomCommonJvm = "2.7.1"
 navigationFragment = "2.9.0"
 navigationUi = "2.9.0"
 
 [libraries]
+androidx-core = { module = "androidx.test:core", version.ref = "core" }
+androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navVersion" }
+androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navVersion" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCommonJvm" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomCommonJvm" }
+androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "roomCommonJvm" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -20,6 +29,7 @@ appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "a
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
 volley = { module = "com.android.volley:volley", version.ref = "volley" }
 room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "roomCommonJvm" }
 navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
