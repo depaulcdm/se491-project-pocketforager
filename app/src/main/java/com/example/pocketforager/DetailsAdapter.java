@@ -46,15 +46,11 @@ public class DetailsAdapter
             p.setCommonName(oldPlant.getCommonName());
 
             List<String> sciList = oldPlant.getScientificName();
-            String sci = (sciList != null && !sciList.isEmpty())
-                    ? sciList.get(0)
-                    : "—";
+            String sci = (sciList != null && !sciList.isEmpty()) ? sciList.get(0) : "—";
             p.setScientificName(sci);
 
             List<String> otherList = oldPlant.getOtherName();
-            String other = (otherList != null && !otherList.isEmpty())
-                    ? TextUtils.join(", ", otherList)
-                    : "—";
+            String other = (otherList != null && !otherList.isEmpty()) ? TextUtils.join(", ", otherList) : "—";
             p.setOtherName(other);
 
             p.setImageURL(oldPlant.getImageURL());

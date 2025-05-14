@@ -3,8 +3,7 @@ package com.example.pocketforager.model;
 import java.io.Serializable;
 
 public class Plant implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+    //private static final long serialVersionUID = 1L;
     private int ID;
     private String commonName;
     private String scientificName;
@@ -12,7 +11,6 @@ public class Plant implements Serializable {
     private String imageURL;
     private boolean edible;
 
-    // getters & setters
     public int getID() { return ID; }
     public void setID(int ID) { this.ID = ID; }
 

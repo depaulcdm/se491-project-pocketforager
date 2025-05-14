@@ -24,39 +24,38 @@ public class DetailsPageActivity extends AppCompatActivity {
 
     private ActivityDetailsBinding binding;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
         Plant plant = (Plant) getIntent().getSerializableExtra(EXTRA_PLANT);
 
-
         if (plant != null) {
+
             String url = plant.getImageURL();
+
             if (url != null && !url.isEmpty()) {
 
                 // getting the photo with picasso
                 binding.tvNoPhoto.setVisibility(View.GONE);
-                Picasso.get()
-                        .load(url)
-                        .placeholder(R.drawable.photo_box_border_rounded)
-                        .into(binding.imagePlant, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                // image was found
-                                binding.tvNoPhoto.setVisibility(View.GONE);
-                            }
 
-                            @Override
-                            public void onError(Exception e) {
-                                // if getting the photo didn't work
-                                binding.tvNoPhoto.setVisibility(View.VISIBLE);
-                                binding.imagePlant.setImageDrawable(null);
-                            }
-                        });
+                Picasso.get().load(url).placeholder(R.drawable.photo_box_border_rounded).into(binding.imagePlant, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        // image was found
+                        binding.tvNoPhoto.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        // if getting the photo didn't work
+                        binding.tvNoPhoto.setVisibility(View.VISIBLE);
+                        binding.imagePlant.setImageDrawable(null);
+                    }
+                });
 
 
             } else {
