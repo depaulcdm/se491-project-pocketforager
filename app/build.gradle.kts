@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.room.common.jvm)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+    implementation(libs.play.services.location)
     val room_version = "2.7.1" // for local database
 
     val navVersion = "2.8.8" // for basic navigation
