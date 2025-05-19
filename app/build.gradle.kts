@@ -72,11 +72,13 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
+    // for google maps
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+
     //test implementation
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.room:room-testing:2.5.2")
     testImplementation("androidx.test:core:1.5.0")
-
 
 
     // Picasso for showing plant picture in details page
