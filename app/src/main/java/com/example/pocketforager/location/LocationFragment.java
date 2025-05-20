@@ -34,7 +34,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
                              @Nullable Bundle savedInstanceState) {
         gbifClient = new LocationVolley(requireContext());
 
-        // I'm assuming userLocation is given by someone
+        // I'm assuming userLocation is given by someone?
         return inflater.inflate(R.layout.location_fragment, container, false);
     }
 
