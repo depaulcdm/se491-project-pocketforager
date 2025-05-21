@@ -52,9 +52,7 @@ dependencies {
     implementation(libs.room.common.jvm)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
-    val room_version = "2.7.1" // for local database
 
-    val navVersion = "2.8.8" // for basic navigation
 
     //for basic navigation
     implementation(libs.androidx.navigation.fragment.ktx)
@@ -69,20 +67,7 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.volley)
-    //implementation(libs.play.services.location)
-    //implementation(libs.gms.play.services.location)
-
-// Google Maps SDK
-    //implementation (libs.play.services.maps.v1820)
-
-// Location Services (for geofencing and location updates)
-    //implementation (libs.play.services.location)
-
-// Maps Utils (for clustering, heatmaps, etc. — optional but useful)
-    //implementation (libs.android.maps.utils)
-
-    //implementation (libs.play.services.maps)
-    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.gms:play-services-maps:19.2.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
