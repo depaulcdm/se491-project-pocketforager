@@ -1,5 +1,6 @@
 package com.example.pocketforager;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -10,7 +11,10 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -25,6 +29,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ActivityMapsBinding binding;
     private final float zoomDefault = 15.0f;
     private static final int LOCATION_REQUEST = 111;
+    private FusedLocationProviderClient mFusedLocationClient;
     private LocationManager locationManager;
 
     @Override
@@ -38,7 +43,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        //mapFragment.getMapAsync(this);
+
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        determineLocation();
     }
 
     /**
@@ -73,9 +85,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private boolean checkPermission() {
         if (ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION) !=
+                Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED) {
-
 
             ActivityCompat.requestPermissions(this,
                     new String[]{
@@ -84,5 +95,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return false;
         }
         return true;
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == LOCATION_REQUEST) {
+            if (permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    determineLocation();
+                } else {
+                    Toast.makeText(this, "Location Permission not Granted", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }
+    }
+
+    private void determineLocation() {
+        if (checkPermission()) {
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, location -> {
+                        // Got last known location. In some rare situations this can be null.
+                        // Add a marker at current location
+                        LatLng origin = new LatLng(location.getLatitude(), location.getLongitude());
+                        //mMap.addMarker(new MarkerOptions().position(origin).title("My Origin"));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(origin, zoomDefault));
+                    })
+                    .addOnFailureListener(
+                            e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show());
+        }
     }
 }
