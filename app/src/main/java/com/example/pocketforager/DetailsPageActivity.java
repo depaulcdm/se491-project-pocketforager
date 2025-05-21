@@ -2,12 +2,17 @@ package com.example.pocketforager;
 import static android.content.Intent.getIntent;
 import static androidx.constraintlayout.motion.widget.Debug.getLocation;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.widget.Toast;
 import com.example.pocketforager.data.AppDatabase;
 import com.example.pocketforager.data.PlantEntity;
 import java.util.Date;
 import android.util.Log;
 import com.google.android.material.snackbar.Snackbar;
+
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 
@@ -27,6 +32,7 @@ public class DetailsPageActivity extends AppCompatActivity {
     private ActivityDetailsBinding binding;
     private PlantDetailsVolley detailsVolley;
     private PlantDetails details;
+    private static final int LOCATION_REQUEST = 111;
 
 
     @Override
@@ -129,5 +135,29 @@ public class DetailsPageActivity extends AppCompatActivity {
 
     public void failedDetails(){
         Log.d(TAG, "JSON failed for some reason");
+    }
+
+    public void openMap(View v) {
+
+        if(checkPermission()){
+            Intent intent = new Intent(this, Map_Screen.class);
+            //intent.putExtra(DetailsPageActivity.EXTRA_PLANT, modelPlant);
+            startActivity(intent);
+        }
+
+    }
+
+    private boolean checkPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                    }, LOCATION_REQUEST);
+            return false;
+        }
+        return true;
     }
 }
