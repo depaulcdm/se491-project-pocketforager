@@ -68,6 +68,20 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.volley)
+    //implementation(libs.play.services.location)
+    //implementation(libs.gms.play.services.location)
+
+// Google Maps SDK
+    //implementation (libs.play.services.maps.v1820)
+
+// Location Services (for geofencing and location updates)
+    //implementation (libs.play.services.location)
+
+// Maps Utils (for clustering, heatmaps, etc. — optional but useful)
+    //implementation (libs.android.maps.utils)
+
+    //implementation (libs.play.services.maps)
+    //implementation("com.google.android.gms:play-services-maps:18.2.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
