@@ -22,60 +22,58 @@ public class LocationVolley {
         void onFailure(Exception e);
     }
 
+    // For running the app
     public LocationVolley(Context context) {
-
-        queue = Volley.newRequestQueue(context.getApplicationContext());
+        this.queue = createRequestQueue(context);
     }
 
-    //Get occurrences around a bounding box
-    public void getOccurrences(String scientificName, double lonMin, double lonMax, double latMin,
-                               double latMax, int limit, OccurrenceCallback callback) {
+    // For running unit tests
+    public LocationVolley(RequestQueue requestQueue) {
+        this.queue = requestQueue;
+    }
+
+
+    protected RequestQueue createRequestQueue(Context context) {
+        return Volley.newRequestQueue(context);
+    }
+
+
+    public void getOccurrences(String scientificName, double lonMin, double lonMax, double latMin, double latMax,
+            int limit, OccurrenceCallback callback) {
 
         String envelope = String.format("ENVELOPE(%f,%f,%f,%f)", lonMin, lonMax, latMax, latMin);
-        String url = BASE_URL + "?scientificName=" + scientificName + "&has_coordinate=true"
-                + "&geometry=" + envelope + "&limit=" + limit;
+        String url = BASE_URL + "?scientificName=" + scientificName + "&has_coordinate=true" + "&geometry=" + envelope
+                + "&limit=" + limit;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        try {
-
-                            JSONArray results = response.getJSONArray("results");
-                            List<Occurrence> list = new ArrayList<>();
-
-                            for (int i = 0; i < results.length(); i++) {
-
-                                JSONObject item = results.getJSONObject(i);
-
-                                if (!item.isNull("decimalLatitude") && !item.isNull("decimalLongitude")) {
-
-                                    double lat = item.getDouble("decimalLatitude");
-                                    double lon = item.getDouble("decimalLongitude");
-
-                                    list.add(new Occurrence(lat, lon));
-                                }
-                            }
-
-                            callback.onSuccess(list);
-
-                        } catch (JSONException e) {
-
-                            callback.onFailure(e);
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        callback.onFailure(error);
-                    }
-                }
-        );
+                response -> parseResponse(response, callback), error -> callback.onFailure(error));
 
         queue.add(request);
+    }
+
+
+    public void parseResponse(JSONObject response, OccurrenceCallback callback) {
+        try {
+            JSONArray results = response.getJSONArray("results");
+            List<Occurrence> list = new ArrayList<>();
+
+            for (int i = 0; i < results.length(); i++) {
+                JSONObject item = results.getJSONObject(i);
+
+                if ("Plantae".equals(item.optString("kingdom")) && !item.isNull("decimalLatitude")
+                        && !item.isNull("decimalLongitude")) {
+
+                    double lat = item.getDouble("decimalLatitude");
+                    double lon = item.getDouble("decimalLongitude");
+                    list.add(new Occurrence(lat, lon));
+                }
+            }
+
+            callback.onSuccess(list);
+
+        } catch (JSONException e) {
+            callback.onFailure(e);
+        }
     }
 }
 

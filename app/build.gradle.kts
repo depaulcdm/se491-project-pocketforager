@@ -81,6 +81,9 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.room:room-testing:2.5.2")
     testImplementation("androidx.test:core:1.5.0")
+    testImplementation ("org.mockito:mockito-core:4.+")
+    testImplementation ("junit:junit:4.13.2")
+    testImplementation ("org.json:json:20230227")
 
 
     // Picasso for showing plant picture in details page
