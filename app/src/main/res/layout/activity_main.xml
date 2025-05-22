@@ -10,38 +10,61 @@
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/SearchTextBar"
-        android:layout_width="392dp"
+        android:layout_width="373dp"
         android:layout_height="47dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginEnd="8dp"
         android:hint="Search"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.011" />
 
     <Button
-        android:id="@+id/Search"
-        android:layout_width="321dp"
+        android:id="@+id/SearchLocation"
+        android:layout_width="190dp"
         android:layout_height="41dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:backgroundTint="#7EAE04"
         android:onClick="search"
-        android:text="@string/search"
-        app:layout_constraintBottom_toTopOf="@+id/searchResults"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Search by Plant Name"
+        app:layout_constraintEnd_toStartOf="@+id/searchLocation"
+        app:layout_constraintHorizontal_bias="0.005"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/SearchTextBar" />
+
+    <Button
+        android:id="@+id/searchLocation"
+        android:layout_width="190dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="208dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#7EAE04"
+        android:onClick="searchLocation"
+        android:text="Search by Location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SearchTextBar" />
+
+    <Button
+        android:id="@+id/searchLocation2"
+        android:layout_width="394dp"
+        android:layout_height="49dp"
+        android:backgroundTint="#7EAE04"
+        android:onClick="useCurrentLocation"
+        android:text="Find Plants Near Me"
+        app:layout_constraintBottom_toTopOf="@+id/searchResults"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchLocation"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
         android:onClick="clearSearch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -49,8 +72,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchResults"
-        android:layout_width="409dp"
-        android:layout_height="617dp"
+        android:layout_width="413dp"
+        android:layout_height="534dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"

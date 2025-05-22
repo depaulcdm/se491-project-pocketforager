@@ -1,29 +1,47 @@
 package com.example.pocketforager;
 
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import android.content.Intent;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.pocketforager.model.Plant;
 import java.util.List;
 import com.example.pocketforager.databinding.ActivityMainBinding;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
     private ConnectivityManager connectivityManager;
+
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 101;
+
+    private FusedLocationProviderClient fusedLocationClient;
+
+    private TextView locationTextView;
 
     private ActivityMainBinding binding;
     private ArrayList<Plants> Plants = new ArrayList<>();
@@ -38,6 +56,13 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         connectivityManager  = getSystemService(ConnectivityManager.class);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+        } else {
+            getLastLocation();
+        }
+
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -49,6 +74,27 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    private void getLastLocation() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationClient.getLastLocation()
+                .addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            Location location = task.getResult();
+                            double latitude = location.getLatitude();
+                            double longitude = location.getLongitude();
+                            Toast.makeText(MainActivity.this, "Latitude: " + latitude + ", Longitude: " + longitude, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Failed to get location", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
 
     @SuppressLint("NotifyDataSetChanged")
     public void acceptPlants(ArrayList<Plants> Plants){
@@ -97,6 +143,31 @@ public class MainActivity extends AppCompatActivity {
         // binding.SearchTextBar.setText("");
 
 
+    }
+
+    public void searchLocation(View view) {
+        String searchQuery = Objects.requireNonNull(binding.SearchTextBar.getText()).toString();
+        if (searchQuery.isEmpty()) {
+            return;
+        }
+        if (searchQuery.length() < 3) {
+            showAlertDialog("Search string too short", "Please try a longer search string.");
+            return;
+        }
+
+        if (!isNetworkAvailable()) {
+            showAlertDialog("No Connection", "No network connection available. Cannot contact Art Institute API.");
+            return;
+        }
+
+
+
+    }
+
+    public void useCurrentLocation(View view) {
+        getLastLocation();
+
+        // Get the current location and use it for the search
     }
 
     private void showAlertDialog(String title, String message) {

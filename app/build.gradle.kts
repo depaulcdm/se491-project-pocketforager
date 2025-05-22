@@ -52,6 +52,10 @@ dependencies {
     implementation(libs.room.common.jvm)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+    implementation(libs.play.services.location)
+    implementation(libs.play.services.maps)
+    val room_version = "2.7.1" // for local database
+
 
 
     //for basic navigation
@@ -73,11 +77,16 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
+    // for google maps
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+
     //test implementation
     testImplementation("junit:junit:4.13.2")
     testImplementation("androidx.room:room-testing:2.5.2")
     testImplementation("androidx.test:core:1.5.0")
-
+    testImplementation ("org.mockito:mockito-core:4.+")
+    testImplementation ("junit:junit:4.13.2")
+    testImplementation ("org.json:json:20230227")
 
 
     // Picasso for showing plant picture in details page
