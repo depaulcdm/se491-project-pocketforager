@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
 
 android {
@@ -55,7 +56,7 @@ dependencies {
     implementation(libs.play.services.maps)
     val room_version = "2.7.1" // for local database
 
-    val navVersion = "2.8.8" // for basic navigation
+
 
     //for basic navigation
     implementation(libs.androidx.navigation.fragment.ktx)
@@ -70,6 +71,8 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.volley)
+    implementation("com.google.android.gms:play-services-maps:19.2.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

@@ -2,6 +2,7 @@ package com.example.pocketforager;
 import static android.content.Intent.getIntent;
 import static androidx.constraintlayout.motion.widget.Debug.getLocation;
 
+import android.content.Intent;
 import android.widget.Toast;
 import com.example.pocketforager.data.AppDatabase;
 import com.example.pocketforager.data.PlantEntity;
@@ -129,5 +130,12 @@ public class DetailsPageActivity extends AppCompatActivity {
 
     public void failedDetails(){
         Log.d(TAG, "JSON failed for some reason");
+    }
+
+    public void openMap(View v) {
+
+        Intent intent = new Intent(this, MapsActivity.class);
+        //intent.putExtra(DetailsPageActivity.EXTRA_PLANT, modelPlant);
+        startActivity(intent);
     }
 }
