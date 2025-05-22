@@ -178,7 +178,7 @@
             android:textColor="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/contentContainer" />
+            app:layout_constraintTop_toBottomOf="@id/Map_button" />
 
         <Button
             android:id="@+id/Map_button"
@@ -190,7 +190,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/contentContainer" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
