@@ -1,8 +1,9 @@
 package com.example.pocketforager;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class PlantDetails {
+public class PlantDetails implements Serializable {
     private final String photo_url;
     private final String common_name;
     private final List<String> scientific_name;
