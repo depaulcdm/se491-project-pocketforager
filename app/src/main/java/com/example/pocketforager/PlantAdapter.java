@@ -7,10 +7,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pocketforager.databinding.PlantentryBinding;
+import com.example.pocketforager.databinding.PlantlistRecyclerviewBinding;
 
 import java.util.ArrayList;
 import android.text.TextUtils;
 import java.util.List;
+import com.squareup.picasso.Picasso;
 
 
 public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
@@ -27,7 +29,7 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
     @NonNull
     @Override
     public PlantListHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        PlantentryBinding binding = PlantentryBinding.inflate(LayoutInflater.from
+        PlantlistRecyclerviewBinding binding = PlantlistRecyclerviewBinding.inflate(LayoutInflater.from
                 (parent.getContext()),parent,false);
 
         //binding.getRoot().setOnClickListener(mainActivity);
@@ -38,7 +40,21 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
     public void onBindViewHolder(@NonNull PlantListHolder holder, int position) {
 
         Plants plant = Plants.get(position);
-        holder.binding.plantName.setText(plant.getCommonName());
+        holder.binding.RecyclerTitle.setText(plant.getCommonName());
+        holder.binding.recyclerScientificName.setText(plant.getScientificName().get(0));
+        String imageUrl = plant.getImageURL();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Picasso.get()
+                    .load(imageUrl)
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.ic_launcher_background)
+                    .into(holder.binding.thumbnail);
+        } else {
+            // Load a placeholder image if the URL is null or empty
+            Picasso.get()
+                    .load(R.drawable.not_available)
+                    .into(holder.binding.thumbnail);
+        }
 
         // adding this for clicking on plant to show details
         holder.binding.getRoot().setOnClickListener(v -> {
