@@ -4,15 +4,20 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import com.example.pocketforager.location.LocationVolley;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.example.pocketforager.location.Occurrence;
+import com.example.pocketforager.model.Plant;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,6 +28,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.pocketforager.databinding.ActivityMapsBinding;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -31,10 +39,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int LOCATION_REQUEST = 111;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationManager locationManager;
+    private LocationVolley locationVolley;
+    private ArrayList<String> Science_names = new ArrayList<>();
+    private String TAG = "MAp Activity: ";
+    private GBIFVolley gbifVolley = new GBIFVolley();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        locationVolley = new LocationVolley(this);
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -49,7 +65,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        //PlantDetails plant = (PlantDetails) getIntent().get;
+
+        Intent intent = getIntent();
+        ArrayList<String> receivedList = intent.getStringArrayListExtra("Science_Names");
+
+        if (receivedList != null) {
+            for (String item : receivedList) {
+                Log.d("ReceivedItem", item);
+                Science_names.add(item);
+            }
+        }
+
         determineLocation();
+
     }
 
     /**
@@ -123,11 +152,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         // Got last known location. In some rare situations this can be null.
                         // Add a marker at current location
                         LatLng origin = new LatLng(location.getLatitude(), location.getLongitude());
+                        double lat0 = location.getLatitude();
+                        double lon0 = location.getLongitude();
+                        double delta = 0.1;
+
+
                         //mMap.addMarker(new MarkerOptions().position(origin).title("My Origin"));
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(origin, zoomDefault));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLng(origin));
+                        for(String name: Science_names){
+                            Log.d(TAG, "Fruit name: " + name);
+                            gbifVolley.fetchOccurrences(name,1000,this);
+                        }
                     })
                     .addOnFailureListener(
                             e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show());
+        }
+    }
+
+    public void addMarkers(ArrayList<LatLng> latlngs){
+
+
+        for(LatLng latlon: latlngs){
+            mMap.addMarker(new MarkerOptions().position(latlon));
         }
     }
 }

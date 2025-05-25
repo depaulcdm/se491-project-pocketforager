@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.widget.Toast;
 import com.example.pocketforager.data.AppDatabase;
 import com.example.pocketforager.data.PlantEntity;
+
+import java.util.ArrayList;
 import java.util.Date;
 import android.util.Log;
 import com.google.android.material.snackbar.Snackbar;
@@ -135,7 +137,13 @@ public class DetailsPageActivity extends AppCompatActivity {
     public void openMap(View v) {
 
         Intent intent = new Intent(this, MapsActivity.class);
-        //intent.putExtra(DetailsPageActivity.EXTRA_PLANT, modelPlant);
+
+        if(details != null){
+            ArrayList<String> science_names = new ArrayList<>(details.getScientific_name());
+            intent.putStringArrayListExtra("Science_Names",science_names);
+            Log.d(TAG, "Name of fruit ");
+        }
         startActivity(intent);
+
     }
 }
