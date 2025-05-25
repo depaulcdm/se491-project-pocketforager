@@ -42,6 +42,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationVolley locationVolley;
     private ArrayList<String> Science_names = new ArrayList<>();
     private String TAG = "MAp Activity: ";
+    private GBIFVolley gbifVolley = new GBIFVolley();
 
 
     @Override
@@ -154,40 +155,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         double lat0 = location.getLatitude();
                         double lon0 = location.getLongitude();
                         double delta = 0.1;
-                        double lonMin = lon0 - delta;
-                        double lonMax = lon0 + delta;
-                        double latMin = lat0 - delta;
-                        double latMax = lat0 + delta;
+
 
                         //mMap.addMarker(new MarkerOptions().position(origin).title("My Origin"));
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(origin, zoomDefault));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLng(origin));
                         for(String name: Science_names){
                             Log.d(TAG, "Fruit name: " + name);
-                            locationVolley.getOccurrences(name,lonMin,lonMax,latMin,latMax,200,
-                                    new LocationVolley.OccurrenceCallback() {
-                                @Override
-                                public void onSuccess(List<Occurrence> occurrences) {
-
-                                    for (Occurrence o : occurrences) {
-
-                                        LatLng pos = new LatLng(o.getLatitude(), o.getLongitude());
-                                        mMap.addMarker(new MarkerOptions().position(pos));
-                                    }
-
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat0, lon0), 10f));
-                                }
-
-                                @Override
-                                public void onFailure(Exception e) {
-
-                                    //Toast.makeText(this, "Failed to load occurrences", Toast.LENGTH_SHORT).show();
-                                    Log.d(TAG, "failed to add markers of plant location.");
-                                }
-                            });
+                            gbifVolley.fetchOccurrences(name,1000,this);
                         }
                     })
                     .addOnFailureListener(
                             e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show());
+        }
+    }
+
+    public void addMarkers(ArrayList<LatLng> latlngs){
+
+
+        for(LatLng latlon: latlngs){
+            mMap.addMarker(new MarkerOptions().position(latlon));
         }
     }
 }
