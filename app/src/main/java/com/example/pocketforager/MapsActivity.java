@@ -172,8 +172,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void addMarkers(ArrayList<LatLng> latlngs){
 
 
-        for(LatLng latlon: latlngs){
-            mMap.addMarker(new MarkerOptions().position(latlon));
+        if(latlngs != null){
+            for(LatLng latlon: latlngs){
+                mMap.addMarker(new MarkerOptions().position(latlon));
+            }
         }
+
+
     }
 }
