@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import android.content.Intent;
 import android.widget.TextView;
@@ -47,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Plants> Plants = new ArrayList<>();
     private PlantAdapter mAdapter;
 
+    private boolean isSearching = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +73,9 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        //GetPlantDataVolley.downloadPlants(this,"");
+        binding.progressBar.setVisibility(View.VISIBLE);
+        GetPlantDataVolley.downloadPlants(this,"");
+        binding.progressBar.setVisibility(View.GONE);
 
 
     }
@@ -97,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     @SuppressLint("NotifyDataSetChanged")
-    public void acceptPlants(ArrayList<Plants> Plants){
+    public void acceptPlants(ArrayList<Plants> Plants) {
+        this.Plants.clear();
         this.Plants.addAll(Plants);
         System.out.println("Plants: " + Plants.size());
         for (Plants plant : Plants) {
@@ -109,21 +115,25 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("------------------");
         }
 
-        if(!Plants.isEmpty()){
-            mAdapter = new PlantAdapter(Plants,this);
+        if (!Plants.isEmpty()) {
+            boolean isGrid = !isSearching;
+            mAdapter = new PlantAdapter(Plants, this, isGrid);
+
+            if (isGrid) {
+                binding.searchResults.setLayoutManager(new GridLayoutManager(this, 3));
+            } else {
+                binding.searchResults.setLayoutManager(new LinearLayoutManager(this));
+            }
+
             binding.searchResults.setAdapter(mAdapter);
-            binding.searchResults.setLayoutManager(new LinearLayoutManager(this));
             mAdapter.notifyDataSetChanged();
+        } else {
+            showAlertDialog("No Results", "No plants found. Please try again.");
         }
-        else {
-            showAlertDialog("No Results", "No plants found for the given search term. Please try a different plant name.");
-        }
-
-
-
     }
 
     public void search(View view) {
+        isSearching = true;
         String searchQuery = Objects.requireNonNull(binding.SearchTextBar.getText()).toString();
         if (searchQuery.isEmpty()) {
             return;
@@ -137,8 +147,12 @@ public class MainActivity extends AppCompatActivity {
             showAlertDialog("No Connection", "No network connection available. Cannot contact Art Institute API.");
             return;
         }
+        binding.progressBar.setVisibility(View.VISIBLE);
+
 
         GetPlantDataVolley.downloadPlants(this, searchQuery);
+        binding.textView.setVisibility(View.GONE);
+        binding.progressBar.setVisibility(View.GONE);
 
         // binding.SearchTextBar.setText("");
 

@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pocketforager.databinding.GridrecyclerviewBinding;
 import com.example.pocketforager.databinding.PlantlistRecyclerviewBinding;
 
 public class PlantListHolder extends RecyclerView.ViewHolder{
@@ -13,12 +14,17 @@ public class PlantListHolder extends RecyclerView.ViewHolder{
     public TextView title;
     public TextView scientificName;
 
-    PlantListHolder(PlantlistRecyclerviewBinding binding){
-        super((binding.getRoot()));
-        this.binding = binding;
-        thumbnail = binding.thumbnail;
-        title = binding.RecyclerTitle;
-        scientificName = binding.recyclerScientificName;
+    public PlantlistRecyclerviewBinding listBinding;
+    public GridrecyclerviewBinding gridBinding;
 
+    public PlantListHolder(PlantlistRecyclerviewBinding binding) {
+        super(binding.getRoot());
+        this.listBinding = binding;
+    }
+
+    public PlantListHolder(GridrecyclerviewBinding binding) {
+        super(binding.getRoot());
+        this.gridBinding = binding;
     }
 }
+
