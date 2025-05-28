@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.pocketforager.location.Occurrence;
 import com.example.pocketforager.model.Plant;
+import com.example.pocketforager.utils.MapPinHelper;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -169,15 +170,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void addMarkers(ArrayList<LatLng> latlngs){
-
-
-        if(latlngs != null){
-            for(LatLng latlon: latlngs){
-                mMap.addMarker(new MarkerOptions().position(latlon));
-            }
+    public void addMarkers(ArrayList<LatLng> latlngs) {
+        List<MarkerOptions> markers = MapPinHelper.generateMarkers(latlngs);
+        for (MarkerOptions marker : markers) {
+            mMap.addMarker(marker);
         }
-
-
     }
+
 }
