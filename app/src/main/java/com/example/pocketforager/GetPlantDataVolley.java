@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GetPlantDataVolley {
@@ -23,6 +24,7 @@ public class GetPlantDataVolley {
     private static final String TAG = "PlantVolley";
 
     public static void downloadPlants(MainActivity mainActivity,String plantName){
+
         RequestQueue queue = Volley.newRequestQueue(mainActivity);
 
 
@@ -32,6 +34,7 @@ public class GetPlantDataVolley {
         buildURL.appendQueryParameter("edible", "1");
         String urlToUse = buildURL.build().toString();
         Log.d(TAG, "URL: " + urlToUse);
+
 
 
         Response.Listener<JSONObject> listener = response -> {
@@ -65,6 +68,7 @@ public class GetPlantDataVolley {
 
 
     }
+
     private static void handleSuccess(String responseText, MainActivity mainActivity, String plantName) throws JSONException {
 
         JSONObject response = new JSONObject(responseText);
@@ -111,7 +115,16 @@ public class GetPlantDataVolley {
             Plants.add(plant);
 
         }
-        mainActivity.acceptPlants(Plants);
+        if (plantName == null || plantName.isEmpty()) {
+            // Preview mode: pick a random subset
+            Collections.shuffle(Plants);
+            Plants.removeIf(plant -> plant.getImageURL() == null || plant.getImageURL().isEmpty());
+            List<Plants> previewSubset = Plants.subList(0, Math.min(24, Plants.size()));
+            mainActivity.acceptPlants(new ArrayList<>(previewSubset));
+        } else {
+            // Search mode: send full search results
+            mainActivity.acceptPlants(Plants);
+        }
 
     }
 }
