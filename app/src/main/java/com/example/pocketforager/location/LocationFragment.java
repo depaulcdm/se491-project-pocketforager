@@ -28,6 +28,8 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
     private LocationVolley gbifClient;
     private Location userLocation;
 
+
+    // initializes LocationVolley and loads UI layout
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -38,6 +40,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         return inflater.inflate(R.layout.location_fragment, container, false);
     }
 
+    // finds google view in layout and tells fragment when map is ready
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
@@ -48,6 +51,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         mapFrag.getMapAsync(this);
     }
 
+    // saves google map so pins can be added later and starts api call
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
 
@@ -59,6 +63,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    // makes api call, gets occurrences and adds pins to map with the locations
     private void queryAndPlot(String scientificName) {
 
         double lat0 = userLocation.getLatitude();
