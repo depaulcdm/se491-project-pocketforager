@@ -55,7 +55,7 @@ public class SearchByLocationFragment extends Fragment {
             NearbyPlantFinder.findNearbyPlants(query, getContext(), new NearbyPlantFinder.NearbyPlantCallback() {
                 @Override
                 public void onResult(List<PlantEntity> plants) {
-                    adapter.updateData(plants);
+                    //adapter.updateData(plants);
                     if (plants.isEmpty()) {
                         Toast.makeText(getContext(), "No edible plants found nearby", Toast.LENGTH_SHORT).show();
                     }
