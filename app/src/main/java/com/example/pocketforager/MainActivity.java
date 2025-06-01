@@ -1,11 +1,14 @@
 package com.example.pocketforager;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import androidx.activity.EdgeToEdge;
@@ -23,6 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.pocketforager.data.AppDatabase;
+import com.example.pocketforager.data.PlantEntity;
 import com.example.pocketforager.model.Plant;
 import java.util.List;
 import com.example.pocketforager.databinding.ActivityMainBinding;
@@ -33,6 +39,8 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,6 +62,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        GetPlantDataVolley.fetchAllEdiblePlants(getApplicationContext());
+
+
+        AppDatabase db = AppDatabase.getInstance(getApplicationContext());
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            List<PlantEntity> plants = db.plantDao().getAllEdiblePlants();
+            for (PlantEntity p : plants) {
+                Log.d("EDIBLE_PLANTS", p.commonName + " - " + p.scientificName);
+            }
+        });
 
         EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());

@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class GetPlantDataVolley {
-    private static String API = "sk-0T7n681a331e6f78b10272";
+    private static String API = "sk-0vim681b5258c92e110289";
     private static String url ="https://perenual.com/api/v2/species-list";
     private static final String TAG = "PlantVolley";
 
@@ -133,7 +133,49 @@ public class GetPlantDataVolley {
 
     }
 
-    public void fetchEdiblePlants(Context context, AppDatabase db) {
+    public static void fetchAllEdiblePlants(Context context) {
+
+        AppDatabase db = AppDatabase.getInstance(context);
+        RequestQueue queue = Volley.newRequestQueue(context);
+
+        for (int page = 1; page <= 37; page++) {
+
+            String url = "https://perenual.com/api/v2/species-list?key=sk-0vim681b5258c92e110289&edible=1&hardiness=1-13&page=" + page;
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                    response -> {
+                        try {
+
+                            JSONArray data = response.getJSONArray("data");
+
+                            for (int i = 0; i < data.length(); i++) {
+
+                                JSONObject plantJson = data.getJSONObject(i);
+
+                                String commonName = plantJson.optString("common_name", "Unknown");
+                                String scientificName = plantJson.optString("scientific_name", "Unknown");
+                                JSONObject image = plantJson.optJSONObject("default_image");
+                                String imageUrl = image != null ? image.optString("thumbnail", "") : "";
+                                String otherName = plantJson.optString("otherName", "");
+
+                                PlantEntity plant = new PlantEntity(commonName, scientificName, imageUrl, otherName, true);
+
+                                new Thread(() -> db.plantDao().insertPlant(plant)).start();
+                            }
+
+                        } catch (JSONException e) {
+                            Log.e("PERENUAL_DB", "JSON error: " + e.getMessage());
+                        }
+                    },
+                    error -> Log.e("PERENUAL_DB", "Volley error: " + error.getMessage())
+            );
+
+            queue.add(request);
+        }
+    }
+
+
+    public static void fetchEdiblePlants(Context context, AppDatabase db) {
 
         final RequestQueue queue = Volley.newRequestQueue(context);
         final String baseUrl = "https://perenual.com/api/v2/species-list?key=sk-0T7n681a331e6f78b10272&edible=1&hardiness=1-13&page=";
