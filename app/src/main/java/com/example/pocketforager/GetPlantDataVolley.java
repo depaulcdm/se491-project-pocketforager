@@ -1,5 +1,6 @@
 package com.example.pocketforager;
 
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
@@ -9,6 +10,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.pocketforager.data.AppDatabase;
+import com.example.pocketforager.data.PlantEntity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +25,8 @@ public class GetPlantDataVolley {
     private static String API = "sk-0T7n681a331e6f78b10272";
     private static String url ="https://perenual.com/api/v2/species-list";
     private static final String TAG = "PlantVolley";
+
+    private static final int MAX_PAGE = 37;
 
     public static void downloadPlants(MainActivity mainActivity,String plantName){
 
@@ -126,5 +131,47 @@ public class GetPlantDataVolley {
             mainActivity.acceptPlants(Plants);
         }
 
+    }
+
+    public void fetchEdiblePlants(Context context, AppDatabase db) {
+
+        final RequestQueue queue = Volley.newRequestQueue(context);
+        final String baseUrl = "https://perenual.com/api/v2/species-list?key=sk-0T7n681a331e6f78b10272&edible=1&hardiness=1-13&page=";
+
+
+        for (int page = 1; page <= MAX_PAGE; page++) {
+
+            String url = baseUrl + page;
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                    response -> {
+
+                        try {
+                            JSONArray plants = response.getJSONArray("data");
+
+                            for (int i = 0; i < plants.length(); i++) {
+
+                                JSONObject plant = plants.getJSONObject(i);
+
+                                String commonName = plant.optString("common_name");
+                                String scientificName = plant.optString("scientific_name");
+                                String imageUrl = plant.optString("default_image");
+                                String description = plant.optString("description", "");
+                                boolean edible = plant.optBoolean("edible", false);
+
+                                PlantEntity entity = new PlantEntity(commonName, scientificName, imageUrl, description, edible);
+                                // Save to local Room database
+                                new Thread(() -> db.plantDao().insertPlant(entity)).start();
+                            }
+                        } catch (JSONException e) {
+
+                            e.printStackTrace();
+                        }
+                    },
+                    error -> Log.e("API_ERROR", "Request failed: " + error.toString())
+            );
+
+            queue.add(request);
+        }
     }
 }

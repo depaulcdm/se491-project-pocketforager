@@ -37,10 +37,10 @@ public class VisitLogTest {
         plantDao = db.plantDao();
     }
 
-    @After
-    public void tearDown() {
-        db.close();
-    }
+    //@After
+    //public void tearDown() {
+        //db.close();
+    //}
 
     @Test
     public void testLogVisitInsertsCorrectData() {

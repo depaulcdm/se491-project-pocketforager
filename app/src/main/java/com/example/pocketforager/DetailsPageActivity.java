@@ -83,11 +83,9 @@ public class DetailsPageActivity extends AppCompatActivity {
                     return;
                 }
 
-                PlantEntity entity = new PlantEntity();
+                PlantEntity entity = new PlantEntity(plant.getCommonName(), plant.getScientificName(),
+                        plant.getImageURL(), plant.getOtherName(), plant.isEdible());
                 entity.plantApiId = "api-id-not-used";
-                entity.commonName = plant.getCommonName();
-                entity.scientificName = plant.getScientificName();
-                entity.location = getLocation();;
                 entity.foundAt = new Date();
 
                 new Thread(() -> {
