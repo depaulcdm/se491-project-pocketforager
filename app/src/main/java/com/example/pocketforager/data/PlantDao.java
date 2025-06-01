@@ -2,14 +2,21 @@ package com.example.pocketforager.data;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Delete;
 import java.util.List;
 
 @Dao
 public interface PlantDao {
-    @Insert
-    long insertPlant(PlantEntity plant);
+    //@Insert
+    //long insertPlant(PlantEntity plant);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertPlant(PlantEntity plant);
+
+    @Query("SELECT * FROM plants WHERE edible = 1")
+    List<PlantEntity> getAllEdiblePlants();
 
     @Delete
     void deletePlant(PlantEntity plant);
@@ -19,4 +26,5 @@ public interface PlantDao {
 
     @Query("SELECT * FROM plants WHERE api_id = :apiId LIMIT 1")
     PlantEntity findByApiId(String apiId);
+
 }

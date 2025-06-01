@@ -7,8 +7,9 @@ import java.util.Date;
 
 @Entity(tableName = "plants")
 public class PlantEntity {
+
     @PrimaryKey(autoGenerate = true)
-    public long id;
+    public int id;
 
     @ColumnInfo(name = "api_id")
     public String plantApiId;
@@ -24,6 +25,23 @@ public class PlantEntity {
 
     @ColumnInfo(name = "location")
     public String location;
+
+    @ColumnInfo(name = "image_url")
+    public String imageUrl;
+
+    @ColumnInfo(name = "other_name")
+    public String otherName;
+
+    @ColumnInfo(name = "edible")
+    public boolean edible;
+
+    public PlantEntity(String commonName, String scientificName, String imageUrl, String otherName, boolean edible) {
+        this.commonName = commonName;
+        this.scientificName = scientificName;
+        this.imageUrl = imageUrl;
+        this.otherName = otherName;
+        this.edible = edible;
+    }
 
     // I'll add edibility status and more later on
 }
