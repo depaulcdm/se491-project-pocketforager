@@ -19,9 +19,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import android.content.Intent;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pocketforager.data.AppDatabase;
 import com.example.pocketforager.data.PlantEntity;
+import com.example.pocketforager.location.SearchByLocationFragment;
 import com.example.pocketforager.model.Plant;
 import java.util.List;
 import com.example.pocketforager.databinding.ActivityMainBinding;
@@ -97,6 +100,15 @@ public class MainActivity extends AppCompatActivity {
         binding.progressBar.setVisibility(View.VISIBLE);
         GetPlantDataVolley.downloadPlants(this,"");
         binding.progressBar.setVisibility(View.GONE);
+
+/*        Button locationSearchButton = findViewById(R.id.SearchLocation);
+        locationSearchButton.setOnClickListener(v -> {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, new SearchByLocationFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });*/
 
 
     }

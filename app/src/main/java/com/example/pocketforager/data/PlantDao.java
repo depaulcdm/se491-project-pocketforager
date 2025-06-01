@@ -27,4 +27,7 @@ public interface PlantDao {
     @Query("SELECT * FROM plants WHERE api_id = :apiId LIMIT 1")
     PlantEntity findByApiId(String apiId);
 
+    @Query("SELECT * FROM plants WHERE scientific_name IN (:names)")
+    List<PlantEntity> getEdiblePlantsInArea(List<String> names);
+
 }

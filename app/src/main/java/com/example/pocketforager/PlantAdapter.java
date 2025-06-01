@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pocketforager.data.PlantEntity;
 import com.example.pocketforager.databinding.GridrecyclerviewBinding;
 import com.example.pocketforager.databinding.PlantlistRecyclerviewBinding;
 
@@ -19,11 +20,12 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
 
 
     private final ArrayList<Plants> Plants;
+
     private final MainActivity mainActivity;
 
     private final boolean isGridLayout = false;
 
-    public PlantAdapter(ArrayList<com.example.pocketforager.Plants> plants, MainActivity mainActivity, boolean isGrid) {
+    public PlantAdapter(ArrayList<Plants> plants, MainActivity mainActivity, boolean isGrid) {
         Plants = plants;
         this.mainActivity = mainActivity;
     }
@@ -95,5 +97,22 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
     public int getItemCount() {
         return Plants.size();
     }
+
+/*
+    public void updateData(List<PlantEntity> newPlants) {
+        this.plants.clear();
+        for (PlantEntity entity : newPlants) {
+            this.plants.add(new Plants(
+                    entity.id,
+                    entity.commonName,
+                    entity.scientificName,
+                    entity.otherName,
+                    entity.imageUrl
+            ));
+        }
+        notifyDataSetChanged();
+    }
+*/
+
 }
 

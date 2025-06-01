@@ -12,6 +12,8 @@ public class PlantDetails implements Serializable {
     private final boolean edible_leaf;
     private final String hardiness_location;
 
+    //private final boolean is_edible;
+
 
     public PlantDetails(String photoUrl, String commonName, List<String> scientificName, List<String> otherName, boolean edibleFruit, boolean edibleLeaf, String hardinessLocation) {
         photo_url = photoUrl;
@@ -21,6 +23,7 @@ public class PlantDetails implements Serializable {
         edible_fruit = edibleFruit;
         edible_leaf = edibleLeaf;
         hardiness_location = hardinessLocation;
+        //is_edible = edible;
     }
 
     public String getCommon_name() {

@@ -187,7 +187,7 @@ public class GetPlantDataVolley {
     public static void fetchEdiblePlants(Context context, AppDatabase db) {
 
         final RequestQueue queue = Volley.newRequestQueue(context);
-        final String baseUrl = "https://perenual.com/api/v2/species-list?key=sk-0T7n681a331e6f78b10272&edible=1&hardiness=1-13&page=";
+        final String baseUrl = "https://perenual.com/api/v2/species-list?key=sk-0vim681b5258c92e110289&edible=1&hardiness=1-13&page=";
 
 
         for (int page = 1; page <= MAX_PAGE; page++) {
