@@ -30,6 +30,7 @@ public class DetailsPageActivity extends AppCompatActivity {
     private ActivityDetailsBinding binding;
     private PlantDetailsVolley detailsVolley;
     private PlantDetails details;
+    private String urlImage;
 
 
     @Override
@@ -46,6 +47,7 @@ public class DetailsPageActivity extends AppCompatActivity {
 
             if (url != null && !url.isEmpty()) {
 
+                urlImage = url;
                 // getting the photo with picasso
                 binding.tvNoPhoto.setVisibility(View.GONE);
 
@@ -136,9 +138,15 @@ public class DetailsPageActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, MapsActivity.class);
 
+
+
         if(details != null){
             ArrayList<String> science_names = new ArrayList<>(details.getScientific_name());
             intent.putStringArrayListExtra("Science_Names",science_names);
+            if (urlImage != null && !urlImage.isEmpty()){
+                intent.putExtra("imageURL", urlImage);
+            }
+
             Log.d(TAG, "Name of fruit ");
         }
         startActivity(intent);
