@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        GetPlantDataVolley.fetchAllEdiblePlants(getApplicationContext());
+        //GetPlantDataVolley.fetchAllEdiblePlants(getApplicationContext());
 
 
         AppDatabase db = AppDatabase.getInstance(getApplicationContext());
