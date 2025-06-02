@@ -34,7 +34,7 @@ public class GetPlantDataVolley {
 
 
         Uri.Builder buildURL = Uri.parse(url).buildUpon();
-        buildURL.appendQueryParameter("key", "sk-5GzT681c162c2fcf210300");
+        buildURL.appendQueryParameter("key", "sk-0vim681b5258c92e110289");
         buildURL.appendQueryParameter("q", plantName);
         buildURL.appendQueryParameter("edible", "1");
         String urlToUse = buildURL.build().toString();
@@ -138,9 +138,9 @@ public class GetPlantDataVolley {
         AppDatabase db = AppDatabase.getInstance(context);
         RequestQueue queue = Volley.newRequestQueue(context);
 
-        for (int page = 1; page <= 37; page++) {
+        for (int page = 1; page <= 10; page++) {
 
-            String url = "https://perenual.com/api/v2/species-list?key=sk-0vim681b5258c92e110289&edible=1&hardiness=1-13&page=" + page;
+            String url = "https://perenual.com/api/v2/species-list?key=sk-0vim681b5258c92e110289&edible=1&hardiness=1-9&page=" + page;
 
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                     response -> {
@@ -153,7 +153,16 @@ public class GetPlantDataVolley {
                                 JSONObject plantJson = data.getJSONObject(i);
 
                                 String commonName = plantJson.optString("common_name", "Unknown");
-                                String scientificName = plantJson.optString("scientific_name", "Unknown");
+                                
+                                String scientificName = "";
+
+                                JSONArray sciNames = plantJson.optJSONArray("scientific_name");
+                                if (sciNames != null && sciNames.length() > 0) {
+                                    scientificName = sciNames.optString(0);
+                                } else {
+                                    scientificName = plantJson.optString("scientific_name", "Unknown");
+                                }
+
                                 JSONObject image = plantJson.optJSONObject("default_image");
                                 String imageUrl = image != null ? image.optString("thumbnail", "") : "";
                                 String otherName = plantJson.optString("otherName", "");
@@ -164,10 +173,10 @@ public class GetPlantDataVolley {
                             }
 
                         } catch (JSONException e) {
-                            Log.e("PERENUAL_DB", "JSON error: " + e.getMessage());
+                            Log.e("PERENUAL_DB2", "JSON error: " + e.getMessage());
                         }
                     },
-                    error -> Log.e("PERENUAL_DB", "Volley error: " + error.getMessage())
+                    error -> Log.e("PERENUAL_DB2", "Volley error: " + error.getMessage())
             );
 
             queue.add(request);
@@ -178,7 +187,7 @@ public class GetPlantDataVolley {
     public static void fetchEdiblePlants(Context context, AppDatabase db) {
 
         final RequestQueue queue = Volley.newRequestQueue(context);
-        final String baseUrl = "https://perenual.com/api/v2/species-list?key=sk-0T7n681a331e6f78b10272&edible=1&hardiness=1-13&page=";
+        final String baseUrl = "https://perenual.com/api/v2/species-list?key=sk-0vim681b5258c92e110289&edible=1&hardiness=1-13&page=";
 
 
         for (int page = 1; page <= MAX_PAGE; page++) {

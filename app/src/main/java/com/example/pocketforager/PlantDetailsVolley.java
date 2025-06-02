@@ -19,7 +19,7 @@ import java.util.List;
 
 public class PlantDetailsVolley {
 
-    private static String API = "sk-0T7n681a331e6f78b10272";
+    private static String API = "sk-0vim681b5258c92e110289";
     private static String url ="https://perenual.com/api/v2/species/details/";
     private static final String TAG = "PlantDetailsVolley";
 
@@ -28,7 +28,7 @@ public class PlantDetailsVolley {
 
         String combine = url + ID;
         Uri.Builder buildURL = Uri.parse(combine).buildUpon();
-        buildURL.appendQueryParameter("key", "sk-5GzT681c162c2fcf210300");
+        buildURL.appendQueryParameter("key", "sk-0vim681b5258c92e110289");
 
         String urlToUse = buildURL.build().toString();
         Log.d(TAG, "URL: " + urlToUse);
