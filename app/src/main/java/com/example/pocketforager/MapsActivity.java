@@ -130,9 +130,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 TextView snippet = view.findViewById(R.id.marker_latlon);
                 ImageView image = view.findViewById(R.id.marker_image);
 
-                title.setText(common_name);
-                if(common_name!= null && !common_name.isEmpty()){
 
+                if(common_name!= null && !common_name.isEmpty()){
+                    title.setText(common_name);
                 }
                 if (urlImage != null && !urlImage.isEmpty()) {
 
@@ -155,7 +155,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                    binding.tvNoPhoto.setVisibility(View.VISIBLE);
 //                    binding.imagePlant.setImageDrawable(null);
                 }
-                title.setText(marker.getTitle());
+                //title.setText(marker.getTitle());
                 snippet.setText("Latitude: " + position.latitude + "\nLongitude: " + position.longitude);
 
                 return view;
