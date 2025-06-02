@@ -50,6 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<String> Science_names = new ArrayList<>();
     private String TAG = "MAp Activity: ";
     private GBIFVolley gbifVolley = new GBIFVolley();
+    private String common_name;
 
     private String urlImage = "";
 
@@ -79,6 +80,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ArrayList<String> receivedList = intent.getStringArrayListExtra("Science_Names");
 
         String url = intent.getStringExtra("imageURL");
+        String name = intent.getStringExtra("NAME");
         if (receivedList != null) {
             for (String item : receivedList) {
                 Log.d("ReceivedItem", item);
@@ -89,6 +91,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             urlImage = url;
         }
 
+        if(name != null && !name.isEmpty()){
+            common_name = name;
+        }
         determineLocation();
 
     }
@@ -125,6 +130,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 TextView snippet = view.findViewById(R.id.marker_latlon);
                 ImageView image = view.findViewById(R.id.marker_image);
 
+                if(common_name!= null && !common_name.isEmpty()){
+                    title.setText(common_name);
+                }
                 if (urlImage != null && !urlImage.isEmpty()) {
 
                     //urlImage = url;

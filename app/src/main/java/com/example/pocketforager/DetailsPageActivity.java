@@ -27,6 +27,7 @@ import com.squareup.picasso.Callback;
 public class DetailsPageActivity extends AppCompatActivity {
     public static final String EXTRA_PLANT = "extra_plant";
     private static final String TAG = "DetailsPageActivity";
+    private String plant_name;
     private ActivityDetailsBinding binding;
     private PlantDetailsVolley detailsVolley;
     private PlantDetails details;
@@ -76,6 +77,9 @@ public class DetailsPageActivity extends AppCompatActivity {
 
             // Fill in text fields
 
+            if(plant.getCommonName()!= null){
+                plant_name = plant.getCommonName();
+            }
             binding.tvPlantName.setText(plant.getCommonName());
             binding.tvScientificName.setText(plant.getScientificName());
             binding.tvOtherName.setText(plant.getOtherName().isEmpty() ? "—" : plant.getOtherName());
@@ -145,6 +149,9 @@ public class DetailsPageActivity extends AppCompatActivity {
             intent.putStringArrayListExtra("Science_Names",science_names);
             if (urlImage != null && !urlImage.isEmpty()){
                 intent.putExtra("imageURL", urlImage);
+            }
+            if(plant_name != null && !plant_name.isEmpty()){
+                intent.putExtra("NAME", plant_name);
             }
 
             Log.d(TAG, "Name of fruit ");
