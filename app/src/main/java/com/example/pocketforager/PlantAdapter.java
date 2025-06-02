@@ -19,14 +19,14 @@ import com.squareup.picasso.Picasso;
 public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
 
 
-    private final ArrayList<Plants> Plants;
+    private final ArrayList<Plants> plants;
 
     private final MainActivity mainActivity;
 
     private final boolean isGridLayout = false;
 
     public PlantAdapter(ArrayList<Plants> plants, MainActivity mainActivity, boolean isGrid) {
-        Plants = plants;
+        this.plants = plants;
         this.mainActivity = mainActivity;
     }
 
@@ -48,7 +48,7 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull PlantListHolder holder, int position) {
-        Plants plant = Plants.get(position);
+        Plants plant = plants.get(position);
 
         if (isGridLayout && holder.gridBinding != null) {
             holder.gridBinding.gridTitle.setText(plant.getCommonName());
@@ -95,24 +95,23 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
 
     @Override
     public int getItemCount() {
-        return Plants.size();
+        return plants.size();
     }
 
-/*
-    public void updateData(List<PlantEntity> newPlants) {
+
+    public void updateData(List<PlantEntity> newPlantEntities) {
         this.plants.clear();
-        for (PlantEntity entity : newPlants) {
+        for (PlantEntity entity : newPlantEntities) {
             this.plants.add(new Plants(
                     entity.id,
                     entity.commonName,
-                    entity.scientificName,
-                    entity.otherName,
+                    List.of(entity.scientificName),  // wrap string in list
+                    List.of(entity.otherName),
                     entity.imageUrl
             ));
         }
         notifyDataSetChanged();
     }
-*/
 
 }
 

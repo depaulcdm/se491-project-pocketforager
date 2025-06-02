@@ -110,6 +110,14 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         });*/
 
+        Button locationSearchButton = findViewById(R.id.SearchLocation);
+        locationSearchButton.setOnClickListener(v -> {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new SearchByLocationFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
 
     }
 

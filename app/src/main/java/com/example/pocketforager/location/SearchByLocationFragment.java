@@ -1,6 +1,7 @@
 package com.example.pocketforager.location;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,11 +32,22 @@ public class SearchByLocationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        Log.d("LOCATION_SEARCH", "Fragment view created");
+
+
         View view = inflater.inflate(R.layout.fragment_search_by_location, container, false);
 
         cityInput = view.findViewById(R.id.city_input);
         stateInput = view.findViewById(R.id.state_input);
         searchButton = view.findViewById(R.id.search_button);
+
+        if (searchButton == null) {
+            Log.e("LOCATION_SEARCH", "searchButton is NULL");
+        } else {
+            Log.d("LOCATION_SEARCH", "searchButton is ready");
+        }
+
         resultsList = view.findViewById(R.id.results_list);
 
         adapter = new PlantAdapter(new ArrayList<>(), (MainActivity) requireActivity(), false);
@@ -43,8 +55,14 @@ public class SearchByLocationFragment extends Fragment {
         resultsList.setAdapter(adapter);
 
         searchButton.setOnClickListener(v -> {
+
+            Log.d("LOCATION_SEARCH", "Search button clicked");
+
             String city = cityInput.getText().toString().trim();
             String state = stateInput.getText().toString().trim().toUpperCase();
+
+            Log.d("LOCATION_SEARCH", "Button clicked with input: " + city + ", " + state);
+
 
             if (city.isEmpty() || state.length() != 2) {
                 Toast.makeText(getContext(), "Enter a valid city and 2-letter state", Toast.LENGTH_SHORT).show();
@@ -52,6 +70,9 @@ public class SearchByLocationFragment extends Fragment {
             }
 
             String query = city + ", " + state;
+
+            Log.d("LOCATION_SEARCH", "Searching for: " + query);
+
             NearbyPlantFinder.findNearbyPlants(query, getContext(), new NearbyPlantFinder.NearbyPlantCallback() {
                 @Override
                 public void onResult(List<PlantEntity> plants) {
