@@ -130,15 +130,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 TextView snippet = view.findViewById(R.id.marker_latlon);
                 ImageView image = view.findViewById(R.id.marker_image);
 
+                title.setText(common_name);
                 if(common_name!= null && !common_name.isEmpty()){
-                    title.setText(common_name);
+
                 }
                 if (urlImage != null && !urlImage.isEmpty()) {
-
-                    //urlImage = url;
-                    // getting the photo with picasso
-                    //binding.tvNoPhoto.setVisibility(View.GONE);
-
 
                     Picasso.get().load(urlImage).placeholder(R.drawable.photo_box_border_rounded).into(image, new Callback() {
                         @Override
@@ -149,9 +145,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         @Override
                         public void onError(Exception e) {
-                            // if getting the photo didn't work
-                            //binding.tvNoPhoto.setVisibility(View.VISIBLE);
-                            //binding.imagePlant.setImageDrawable(null);
+
                         }
                     });
 
