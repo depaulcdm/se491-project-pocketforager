@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pocketforager.data.AppDatabase;
 import com.example.pocketforager.data.PlantEntity;
+import com.example.pocketforager.location.OccurencePlantaeLocationVolley;
 import com.example.pocketforager.location.SearchByLocationFragment;
 import com.example.pocketforager.model.Plant;
 import java.util.List;
@@ -82,12 +83,18 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        connectivityManager  = getSystemService(ConnectivityManager.class);
+        connectivityManager = getSystemService(ConnectivityManager.class);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
         } else {
-            getLastLocation();
+            getLastLocation(locationData -> {
+                if (locationData != null && !locationData.isEmpty()) {
+                    double latitude = locationData.get(0);
+                    double longitude = locationData.get(1);
+                    Log.d("MainActivity", "Latitude: " + latitude + ", Longitude: " + longitude);
+                }
+            });
         }
 
 
@@ -98,22 +105,26 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.progressBar.setVisibility(View.VISIBLE);
-        GetPlantDataVolley.downloadPlants(this,"");
+        GetPlantDataVolley.downloadPlants(this, "");
         binding.progressBar.setVisibility(View.GONE);
 
-/*        Button locationSearchButton = findViewById(R.id.SearchLocation);
-        locationSearchButton.setOnClickListener(v -> {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, new SearchByLocationFragment())
-                    .addToBackStack(null)
-                    .commit();
-        });*/
+//        Button locationSearchButton = findViewById(R.id.searchLocation);
+//        locationSearchButton.setOnClickListener(v -> {
+//            FragmentManager fragmentManager = getSupportFragmentManager();
+//            fragmentManager.beginTransaction()
+//                    .replace(R.id.fragment_container, new SearchByLocationFragment())
+//                    .addToBackStack(null)
+//                    .commit();
+//        });
 
 
     }
 
-    private void getLastLocation() {
+    public interface LocationCallback {
+        void onLocationRetrieved(ArrayList<Double> locationData);
+    }
+
+    private void getLastLocation(LocationCallback callback) {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -125,7 +136,11 @@ public class MainActivity extends AppCompatActivity {
                             Location location = task.getResult();
                             double latitude = location.getLatitude();
                             double longitude = location.getLongitude();
-                            Toast.makeText(MainActivity.this, "Latitude: " + latitude + ", Longitude: " + longitude, Toast.LENGTH_SHORT).show();
+                            ArrayList<Double> locationData = new ArrayList<>();
+                            locationData.add(latitude);
+                            locationData.add(longitude);
+                            Log.d("MainActivity", "Latitude: " + latitude + ", Longitude: " + longitude);
+                            callback.onLocationRetrieved(locationData);
                         } else {
                             Toast.makeText(MainActivity.this, "Failed to get location", Toast.LENGTH_SHORT).show();
                         }
@@ -208,13 +223,28 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
     }
 
     public void useCurrentLocation(View view) {
-        getLastLocation();
+        getLastLocation(locationData -> {
+            if (locationData != null && !locationData.isEmpty()) {
+                double latitude = locationData.get(0);
+                double longitude = locationData.get(1);
+                OccurencePlantaeLocationVolley occurencePlantaeLocationVolley = new OccurencePlantaeLocationVolley();
+                occurencePlantaeLocationVolley.getPlantaeOccurrences(
+                        latitude,
+                        longitude,
+                        50,
+                        100,
+                        this
+                );
 
-        // Get the current location and use it for the search
+
+                //Intent intent = new Intent(this, MapsActivity.class);
+                //startActivity(intent);
+
+                }
+    });
     }
 
     private void showAlertDialog(String title, String message) {
@@ -226,13 +256,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void clearSearch (View v){
+    public void clearSearch(View v) {
         binding.SearchTextBar.setText("");
 
     }
 
 
-    public void dismissKeyboard (View v){
+    public void dismissKeyboard(View v) {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
