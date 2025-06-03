@@ -22,9 +22,9 @@
 
     <Button
         android:id="@+id/SearchPlantName"
-        android:layout_width="165dp"
-        android:layout_height="61dp"
-        android:layout_marginStart="16dp"
+        android:layout_width="140dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="4dp"
         android:backgroundTint="#7EAE04"
         android:onClick="search"
@@ -36,15 +36,27 @@
 
     <Button
         android:id="@+id/searchLocation"
-        android:layout_width="159dp"
-        android:layout_height="61dp"
-        android:layout_marginStart="232dp"
+        android:layout_width="120dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="150dp"
         android:layout_marginTop="4dp"
         android:backgroundTint="#7EAE04"
         android:onClick="useCurrentLocation"
         android:text="Find Plants Near Me"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/SearchTextBar" />
+
+    <Button
+        android:id="@+id/SearchLocation"
+        android:layout_width="128dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="275dp"
+        android:layout_marginTop="4dp"
+        android:backgroundTint="#7EAE04"
+        android:onClick="searchByLocation"
+        android:text="Search by Location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SearchTextBar"/>
 
     <ImageView
         android:id="@+id/cancelButton"
@@ -125,7 +137,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/SearchTextBar"
-        tools:visibility="visible" />
+        tools:visibility="visible" >
+
+
+
+    </FrameLayout>
 
 
 
