@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> scienceNamesList = new ArrayList<>();
 
         Intent intent = new Intent(this, MapsActivity.class);
-        intent.putExtra("scienceNames", scienceNamesList);
+        intent.putExtra("scienceNamesNear", scienceNamesList);
         startActivity(intent);
     }
 

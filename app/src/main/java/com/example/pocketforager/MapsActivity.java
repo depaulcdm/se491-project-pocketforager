@@ -50,7 +50,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationManager locationManager;
     private LocationVolley locationVolley;
-    private ArrayList<String> Science_names = new ArrayList<>();
+    private ArrayList<String> Science_names_details = new ArrayList<>();
+    private ArrayList<String> Science_names_near = new ArrayList<>();
     private String TAG = "MAp Activity: ";
     private GBIFVolley gbifVolley = new GBIFVolley();
     private String common_name;
@@ -82,12 +83,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Intent intent = getIntent();
         ArrayList<String> receivedList = intent.getStringArrayListExtra("Science_Names");
 
+        ArrayList<String> nearList = intent.getStringArrayListExtra("scienceNamesNear");
+
         String url = intent.getStringExtra("imageURL");
         String name = intent.getStringExtra("NAME");
-        if (receivedList != null) {
+
+        if(nearList != null && !nearList.isEmpty()){
+            for (String item : nearList) {
+                Log.d("ReceivedItem for Near", item);
+                Science_names_near.add(item);
+            }
+        }
+        if (receivedList != null && !receivedList.isEmpty()) {
             for (String item : receivedList) {
-                Log.d("ReceivedItem", item);
-                Science_names.add(item);
+                Log.d("ReceivedItem fr Details", item);
+                Science_names_details.add(item);
             }
         }
         if (url!= null && !url.isEmpty()){
@@ -133,10 +143,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 TextView snippet = view.findViewById(R.id.marker_latlon);
                 ImageView image = view.findViewById(R.id.marker_image);
 
-                title.setText(common_name);
-                if(common_name!= null && !common_name.isEmpty()){
 
+                if(common_name!= null && !common_name.isEmpty()){
+                    title.setText(common_name);
                 }
+
+
                 if (urlImage != null && !urlImage.isEmpty()) {
 
                     Picasso.get().load(urlImage).placeholder(R.drawable.photo_box_border_rounded).into(image, new Callback() {
@@ -225,8 +237,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         //mMap.addMarker(new MarkerOptions().position(origin).title("My Origin"));
                         mMap.animateCamera(CameraUpdateFactory.newLatLng(origin));
-                        if (Science_names.size() == 1) {
-                            for (String name : Science_names) {
+                        if (Science_names_details.size() == 1) {
+                            for (String name : Science_names_details) {
                                 Log.d(TAG, "Fruit name: " + name);
                                 gbifVolley.fetchOccurrences(name, 1000, this);
                             }
