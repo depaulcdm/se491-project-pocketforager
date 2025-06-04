@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
-//    jacoco
-//    id("jacoco")
+    jacoco
+    id("jacoco")
 }
 
 android {
@@ -104,46 +104,49 @@ dependencies {
     implementation (libs.picasso.v271828)
 
 }
-//
-//jacoco {
-//    toolVersion = "0.8.12"
-//}
-//
-//tasks.register<JacocoReport>("jacocoTestReport") {
-//    dependsOn("testDebugUnitTest")
-//
-//    reports {
-//        xml.required.set(true)
-//        html.required.set(true)
-//    }
-//
-//    val fileFilter = listOf(
-//        "**/R.class",
-//        "**/R$*.class",
-//        "**/BuildConfig.*",
-//        "**/Manifest*.*",
-//        "**/*Test*.*",
-//        "android/**/*.*"
-//    )
-//
-//    val debugTree = fileTree("${buildDir}/tmp/kotlin-classes/debug") {
-//        exclude(fileFilter)
-//    }
-//
-//    val mainSrc = "${project.projectDir}/src/main/java"
-//
-//    sourceDirectories.setFrom(files(mainSrc))
-//    classDirectories.setFrom(files(debugTree))
-//    executionData.setFrom(
-//        fileTree(buildDir) {
-//            include("jacoco/testDebugUnitTest.exec")
-//        }
-//    )
-//}
-//
-//tasks.withType<Test>().configureEach {
-//    jacoco {
-//        excludes += "jdk.internal.*"
-//    }
-//}
+
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest")
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    val fileFilter = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*"
+    )
+
+    val debugTree = fileTree("${buildDir}/tmp/kotlin-classes/debug") {
+        exclude(fileFilter)
+    }
+
+    val mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.setFrom(files(mainSrc))
+    classDirectories.setFrom(files(debugTree))
+    executionData.setFrom(
+        fileTree(buildDir) {
+            include("jacoco/testDebugUnitTest.exec")
+        }
+    )
+}
+
+tasks.withType<Test>().configureEach {
+    jvmArgs(
+        "--add-opens", "java.base/java.lang=ALL-UNNAMED",
+        "--add-opens", "java.base/java.io=ALL-UNNAMED",
+        "--add-opens", "java.base/jdk.internal.reflect=ALL-UNNAMED"
+    )
+    jacoco {
+        toolVersion = "0.8.12"
+        excludes += listOf("jdk.internal.*")
+    }
+}
 
