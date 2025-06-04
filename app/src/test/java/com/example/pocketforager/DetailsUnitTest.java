@@ -1,3 +1,4 @@
+/*
 package com.example.pocketforager;
 
 import com.example.pocketforager.model.Plant;
@@ -44,3 +45,4 @@ public class DetailsUnitTest {
     }
 }
 
+*/

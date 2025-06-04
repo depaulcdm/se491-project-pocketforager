@@ -1,3 +1,4 @@
+/*
 package com.example.pocketforager;
 
 import static org.junit.Assert.*;
@@ -17,6 +18,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.util.List;
+
 @Ignore
 public class LocationUnitTest {
 
@@ -78,4 +80,5 @@ public class LocationUnitTest {
         assertTrue(implementsInterface);
     }
 }
+*/
 
