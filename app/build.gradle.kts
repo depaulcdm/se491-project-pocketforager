@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
-    jacoco
     id("jacoco")
 }
 
@@ -34,23 +33,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    testOptions {
-        unitTests.isIncludeAndroidResources = true
-        unitTests.all {
-            it.jvmArgs = listOf(
-                "--add-opens=java.base/java.lang=ALL-UNNAMED",
-                "--add-opens=java.base/java.io=ALL-UNNAMED",
-                "--add-opens=java.base/java.util=ALL-UNNAMED"
-            )
-            it.testLogging {
-                events("PASSED", "FAILED", "SKIPPED")
-            }
-            it.extensions.configure<JacocoTaskExtension>("jacoco") {
-                isIncludeNoLocationClasses = true
-            }
-        }
     }
 
 
@@ -136,17 +118,22 @@ tasks.register<JacocoReport>("jacocoTestReport") {
             include("jacoco/testDebugUnitTest.exec")
         }
     )
-}
 
-tasks.withType<Test>().configureEach {
-    jvmArgs(
-        "--add-opens", "java.base/java.lang=ALL-UNNAMED",
-        "--add-opens", "java.base/java.io=ALL-UNNAMED",
-        "--add-opens", "java.base/jdk.internal.reflect=ALL-UNNAMED"
-    )
-    jacoco {
-        toolVersion = "0.8.12"
-        excludes += listOf("jdk.internal.*")
+    doLast {
+        val t = tasks.named("testDebugUnitTest").get() as Test
+        println("\n>>> expected JVM args:\n" + t.allJvmArgs.joinToString(" "))
     }
 }
 
+jacoco { toolVersion = "0.8.12" }
+
+tasks.withType<Test>().configureEach {
+    jvmArgs("--add-opens=java.base/jdk.internal.reflect=ALL-UNNAMED")
+    jacoco { excludes += "jdk.internal.*" }
+
+    testLogging {
+        
+        events("PASSED", "FAILED", "SKIPPED")
+
+    }
+}
