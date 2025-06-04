@@ -4,6 +4,13 @@ plugins {
     id("jacoco")
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
+
 android {
     buildFeatures {
         viewBinding = true
@@ -132,7 +139,7 @@ tasks.withType<Test>().configureEach {
     jacoco { excludes += "jdk.internal.*" }
 
     testLogging {
-        
+
         events("PASSED", "FAILED", "SKIPPED")
 
     }
