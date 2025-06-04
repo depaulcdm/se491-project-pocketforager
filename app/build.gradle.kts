@@ -38,17 +38,17 @@ android {
     testOptions {
         unitTests.isIncludeAndroidResources = true
         unitTests.all {
-            it.jvmArgs("--add-opens=java.base/java.lang=ALL-UNNAMED")
+            it.jvmArgs = listOf(
+                "--add-opens=java.base/java.lang=ALL-UNNAMED",
+                "--add-opens=java.base/java.io=ALL-UNNAMED",
+                "--add-opens=java.base/java.util=ALL-UNNAMED"
+            )
+            it.testLogging {
+                events("PASSED", "FAILED", "SKIPPED")
+            }
             it.extensions.configure<JacocoTaskExtension>("jacoco") {
                 isIncludeNoLocationClasses = true
             }
-        }
-    }
-
-
-    tasks.withType<Test> {
-        testLogging {
-            events("PASSED", "FAILED", "SKIPPED")
         }
     }
 
