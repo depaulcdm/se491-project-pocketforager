@@ -11,6 +11,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.pocketforager.MainActivity;
+import com.example.pocketforager.MapsActivity;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
@@ -27,7 +28,9 @@ public class OccurencePlantaeLocationVolley {
 
 
     private RequestQueue queue;
-    public void getPlantaeOccurrences(double centerLat, double centerLon, double radiusKm, int limit, MainActivity context) {
+    public void getPlantaeOccurrences(double centerLat, double centerLon, double radiusKm, int limit, MapsActivity context) {
+
+        ArrayList<String> names = new ArrayList<>();
 
         RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -77,11 +80,13 @@ public class OccurencePlantaeLocationVolley {
                                     Log.d(TAG, "Lat: " + lat + ", Lon: " + lon + ", Name: " + name);
                                     LatLng location = new LatLng(lat, lon);
                                     coordinates.add(location);
-
+                                    context.addMarkers(coordinates);
 
                                 }
+
                             }
-                            //context.addMarkers(coordinates);
+
+
 
                         } catch (JSONException e) {
                             Log.e(TAG, "JSON parsing error: " + e.getMessage());
@@ -97,5 +102,10 @@ public class OccurencePlantaeLocationVolley {
         queue.add(jsonObjectRequest);
     }
 
+
+    public interface OccurrenceCallback {
+        void onResponse(ArrayList<String> names);
+        void onError(String errorMessage);
+    }
 
 }

@@ -10,6 +10,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.pocketforager.location.OccurencePlantaeLocationVolley;
 import com.example.pocketforager.location.Occurrence;
 import com.example.pocketforager.model.Plant;
 import com.example.pocketforager.utils.MapPinHelper;
@@ -28,6 +30,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -222,13 +225,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         //mMap.addMarker(new MarkerOptions().position(origin).title("My Origin"));
                         mMap.animateCamera(CameraUpdateFactory.newLatLng(origin));
-                        for(String name: Science_names){
-                            Log.d(TAG, "Fruit name: " + name);
-                            gbifVolley.fetchOccurrences(name,1000,this);
+                        if (Science_names.size() == 1) {
+                            for (String name : Science_names) {
+                                Log.d(TAG, "Fruit name: " + name);
+                                gbifVolley.fetchOccurrences(name, 1000, this);
+                            }
+                        } else {
+                            double km = .5;
+                            OccurencePlantaeLocationVolley occurencePlantaeLocationVolley = new OccurencePlantaeLocationVolley();
+                            occurencePlantaeLocationVolley.getPlantaeOccurrences(
+                                    lat0,
+                                    lon0,
+                                    km,
+                                    100,
+                                    this
+                                    );
+
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origin, zoomDefault));
+
+
+                            CircleOptions circleOptions = new CircleOptions()
+                                    .center(origin)
+                                    .radius(km * 1500) // radius in meters
+                                    .strokeColor(Color.BLUE)
+                                    .strokeWidth(2f)
+                                    .fillColor(0x220000FF);
+
+                            mMap.addCircle(circleOptions);
+
+
+
                         }
+
+
                     })
-                    .addOnFailureListener(
-                            e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show());
+                    .addOnFailureListener(this, e -> {
+                        Log.e(TAG, "Error getting location: " + e.getMessage());
+                        Toast.makeText(this, "Error getting location", Toast.LENGTH_SHORT).show();
+                    });
         }
     }
 

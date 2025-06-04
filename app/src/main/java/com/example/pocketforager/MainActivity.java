@@ -226,25 +226,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void useCurrentLocation(View view) {
-        getLastLocation(locationData -> {
-            if (locationData != null && !locationData.isEmpty()) {
-                double latitude = locationData.get(0);
-                double longitude = locationData.get(1);
-                OccurencePlantaeLocationVolley occurencePlantaeLocationVolley = new OccurencePlantaeLocationVolley();
-                occurencePlantaeLocationVolley.getPlantaeOccurrences(
-                        latitude,
-                        longitude,
-                        50,
-                        100,
-                        this
-                );
 
+        if (!isNetworkAvailable()) {
+            showAlertDialog("No Connection", "No network connection available. Cannot Search without internet connection.");
+            return;
+        }
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            showAlertDialog("Permission Denied", "Location permission is required to use this feature.");
+            return;
+        }
 
-                //Intent intent = new Intent(this, MapsActivity.class);
-                //startActivity(intent);
+        ArrayList<String> scienceNamesList = new ArrayList<>();
 
-                }
-    });
+        Intent intent = new Intent(this, MapsActivity.class);
+        intent.putExtra("scienceNames", scienceNamesList);
+        startActivity(intent);
     }
 
     private void showAlertDialog(String title, String message) {
