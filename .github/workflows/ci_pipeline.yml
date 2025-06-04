@@ -46,6 +46,10 @@ jobs:
       - name: Build without tests
         run: ./gradlew assembleDebug --no-daemon
 
+      - name: Run unit tests and generate coverage
+        run: ./gradlew testDebugUnitTest jacocoTestReport --no-daemon
+
+
 
 
 
