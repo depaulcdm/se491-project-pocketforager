@@ -1,4 +1,3 @@
-/*
 package com.example.pocketforager;
 
 import com.example.pocketforager.utils.*;
@@ -80,4 +79,4 @@ public class MapPinHelperTest {
         assertEquals(115.8605, result.get(1).getPosition().longitude, 0.0001);
     }
 }
-*/
+
