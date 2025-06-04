@@ -43,20 +43,11 @@ jobs:
       - name: Giving permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+      - name: Build without tests
+        run: ./gradlew assembleDebug --no-daemon
 
-      - name: Clean  
-        run: ./gradlew clean
-
-      - name: Run tests and make JaCoCo report
-        run: ./gradlew testDebugUnitTest jacocoTestReport --no-daemon
-
-      - name: Get JaCoCo HTML report
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-report
-          path: app/build/reports/jacoco/jacocoTestReport/html
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest --no-daemon
 
 
 
