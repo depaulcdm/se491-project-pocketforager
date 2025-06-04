@@ -1,7 +1,15 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
+    id("jacoco")
 }
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
 
 android {
     buildFeatures {
@@ -34,18 +42,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
-        }
-    }
 
-    tasks.withType<Test> {
-        testLogging {
-            events("PASSED", "FAILED", "SKIPPED")
-        }
-    }
 }
+
 
 dependencies {
 
@@ -93,4 +92,55 @@ dependencies {
     implementation (libs.picasso)
     implementation (libs.picasso.v271828)
 
+}
+
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest")
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    val fileFilter = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*"
+    )
+
+    val debugTree = fileTree("${buildDir}/tmp/kotlin-classes/debug") {
+        exclude(fileFilter)
+    }
+
+    val mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.setFrom(files(mainSrc))
+    classDirectories.setFrom(files(debugTree))
+    executionData.setFrom(
+        fileTree(buildDir) {
+            include("jacoco/testDebugUnitTest.exec")
+        }
+    )
+
+    doLast {
+        val t = tasks.named("testDebugUnitTest").get() as Test
+        println("\n>>> expected JVM args:\n" + t.allJvmArgs.joinToString(" "))
+    }
+}
+
+jacoco { toolVersion = "0.8.12" }
+
+tasks.withType<Test>().configureEach {
+    jvmArgs("--add-opens=java.base/jdk.internal.reflect=ALL-UNNAMED")
+    jacoco { excludes += "jdk.internal.*" }
+
+    testLogging {
+
+        events("PASSED", "FAILED", "SKIPPED")
+
+    }
 }

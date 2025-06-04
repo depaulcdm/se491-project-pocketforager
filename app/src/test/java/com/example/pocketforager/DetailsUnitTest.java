@@ -1,6 +1,8 @@
 package com.example.pocketforager;
 
 import com.example.pocketforager.model.Plant;
+
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -41,4 +43,5 @@ public class DetailsUnitTest {
         assertTrue(d.site);
     }
 }
+
 

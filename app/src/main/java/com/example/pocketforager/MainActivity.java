@@ -2,6 +2,8 @@ package com.example.pocketforager;
 
 import static androidx.core.content.ContentProviderCompat.requireContext;
 
+import static java.security.AccessController.getContext;
+
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -9,10 +11,13 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -24,6 +29,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import android.content.Intent;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,8 +40,11 @@ import com.example.pocketforager.data.PlantEntity;
 import com.example.pocketforager.location.OccurencePlantaeLocationVolley;
 import com.example.pocketforager.location.SearchByLocationFragment;
 import com.example.pocketforager.model.Plant;
+
+import java.util.HashSet;
 import java.util.List;
 import com.example.pocketforager.databinding.ActivityMainBinding;
+import com.example.pocketforager.utils.NearbyPlantFinder;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -43,6 +52,7 @@ import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -61,11 +71,16 @@ public class MainActivity extends AppCompatActivity {
     private PlantAdapter mAdapter;
 
     private boolean isSearching = false;
+    private RecyclerView searchResults;
+    private PlantAdapter plantAdapter;
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         //GetPlantDataVolley.fetchAllEdiblePlants(getApplicationContext());
 
@@ -83,6 +98,12 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        searchResults = findViewById(R.id.searchResults);
+        searchResults.setLayoutManager(new LinearLayoutManager(this));
+        plantAdapter = new PlantAdapter(new ArrayList<>(), this, false);
+        searchResults.setAdapter(plantAdapter);
+
         connectivityManager = getSystemService(ConnectivityManager.class);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -108,14 +129,8 @@ public class MainActivity extends AppCompatActivity {
         GetPlantDataVolley.downloadPlants(this, "");
         binding.progressBar.setVisibility(View.GONE);
 
-//        Button locationSearchButton = findViewById(R.id.searchLocation);
-//        locationSearchButton.setOnClickListener(v -> {
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-//            fragmentManager.beginTransaction()
-//                    .replace(R.id.fragment_container, new SearchByLocationFragment())
-//                    .addToBackStack(null)
-//                    .commit();
-//        });
+        //binding.searchResults.setLayoutManager(new LinearLayoutManager(this));
+        //binding.searchResults.setAdapter(new PlantAdapter(plants, this, false));
 
 
     }
@@ -275,10 +290,99 @@ public class MainActivity extends AppCompatActivity {
         return currentNetwork != null;
     }
 
-    public void openDetails(Plant modelPlant) {
+    public void openDetails(Plant modelPlant, boolean isFromNearbySearch) {
 
         Intent intent = new Intent(this, DetailsPageActivity.class);
         intent.putExtra(DetailsPageActivity.EXTRA_PLANT, modelPlant);
+        intent.putExtra("fromNearby", isFromNearbySearch);
         startActivity(intent);
     }
+
+    public void searchByLocation(View view) {
+        String query = Objects.requireNonNull(binding.SearchTextBar.getText()).toString().trim();
+
+        if (!query.contains(",") || query.length() < 5) {
+            Toast.makeText(this, "Enter location in format: City, ST", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String[] parts = query.split(",");
+        if (parts.length < 2) {
+            Toast.makeText(this, "Invalid format. Use City, ST", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String city = parts[0].trim();
+        String state = parts[1].trim().toUpperCase();
+
+        if (state.length() != 2) {
+            Toast.makeText(this, "State must be 2 letters", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String formattedQuery = city + ", " + state;
+
+        NearbyPlantFinder.findNearbyPlants(formattedQuery, this, new NearbyPlantFinder.NearbyPlantCallback() {
+            @Override
+            public void onResult(List<PlantEntity> plantEntities) {
+                Log.d("PocketForager", "NearbyPlantFinder returned " + plantEntities.size() + " results");
+                if (plantEntities.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "No edible plants found nearby.", Toast.LENGTH_SHORT).show();
+                } else {
+                    ArrayList<Plants> converted = new ArrayList<>();
+
+                    for (PlantEntity entity : plantEntities) {
+                        Log.d("PocketForager", "Found plant: " + entity.commonName + " (" + entity.scientificName + ")");
+
+                        List<String> sciList = new ArrayList<>();
+                        if (entity.scientificName != null && !entity.scientificName.isEmpty()) {
+                            sciList.add(entity.scientificName);
+                        }
+
+                        List<String> otherList = new ArrayList<>();
+                        if (entity.otherName != null && !entity.otherName.isEmpty()) {
+                            otherList.add(entity.otherName);
+                        }
+
+                        Plants p = new Plants(
+                                entity.id,
+                                entity.commonName,
+                                sciList,
+                                otherList,
+                                entity.imageUrl
+                        );
+
+                        converted.add(p);
+                    }
+
+                    Set<String> seenScientificNames = new HashSet<>();
+                    ArrayList<Plants> uniquePlants = new ArrayList<>();
+
+                    for (Plants plant : converted) {
+                        List<String> sciNames = plant.getScientificName();
+                        if (!sciNames.isEmpty() && seenScientificNames.add(sciNames.get(0))) {
+                            uniquePlants.add(plant);
+                        }
+                    }
+
+                    isSearching = true;
+                    binding.textView.setVisibility(View.GONE);
+
+                    mAdapter = new PlantAdapter(uniquePlants, MainActivity.this, false);
+                    binding.searchResults.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                    binding.searchResults.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+
+                }
+            }
+
+
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(MainActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
