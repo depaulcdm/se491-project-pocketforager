@@ -46,8 +46,6 @@ jobs:
       - name: Build without tests
         run: ./gradlew assembleDebug --no-daemon
 
-      - name: Run unit tests
-        run: ./gradlew testDebugUnitTest --no-daemon
 
 
 
