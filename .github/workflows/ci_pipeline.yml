@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -43,24 +43,12 @@ jobs:
       - name: Giving permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+      - name: Build without tests
+        run: ./gradlew assembleDebug --no-daemon
 
-      - name: Clean  
-        run: ./gradlew clean
-
-      - name: Run tests and make JaCoCo report
+      - name: Run unit tests and generate coverage
         run: ./gradlew testDebugUnitTest jacocoTestReport --no-daemon
 
-      - name: Get JaCoCo HTML report
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-report
-          path: app/build/reports/jacoco/jacocoTestReport/html
-
-
-
-        
 
 
 
