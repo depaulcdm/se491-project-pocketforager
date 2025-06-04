@@ -88,7 +88,9 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
                 p.setOtherName(other);
 
                 p.setImageURL(plant.getImageURL());
-                mainActivity.openDetails(p);
+
+                mainActivity.openDetails(p, true); //added a flag for search by location
+
             });
         }
     }

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
+    id("jacoco")
 }
 
 android {
@@ -35,16 +36,21 @@ android {
     }
 
     testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
+        unitTests.isIncludeAndroidResources = true
+        unitTests.all {
+            it.extensions.configure<JacocoTaskExtension>("jacoco") {
+                isIncludeNoLocationClasses = true
+            }
         }
     }
+
 
     tasks.withType<Test> {
         testLogging {
             events("PASSED", "FAILED", "SKIPPED")
         }
     }
+
 }
 
 dependencies {
@@ -94,3 +100,41 @@ dependencies {
     implementation (libs.picasso.v271828)
 
 }
+
+jacoco {
+    toolVersion = "0.8.10"
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest")
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    val fileFilter = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*"
+    )
+
+    val debugTree = fileTree("${buildDir}/tmp/kotlin-classes/debug") {
+        exclude(fileFilter)
+    }
+
+    val mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.setFrom(files(mainSrc))
+    classDirectories.setFrom(files(debugTree))
+    executionData.setFrom(
+        fileTree(buildDir) {
+            include("jacoco/testDebugUnitTest.exec")
+        }
+    )
+}
+
+

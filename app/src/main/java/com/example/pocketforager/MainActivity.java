@@ -290,10 +290,11 @@ public class MainActivity extends AppCompatActivity {
         return currentNetwork != null;
     }
 
-    public void openDetails(Plant modelPlant) {
+    public void openDetails(Plant modelPlant, boolean isFromNearbySearch) {
 
         Intent intent = new Intent(this, DetailsPageActivity.class);
         intent.putExtra(DetailsPageActivity.EXTRA_PLANT, modelPlant);
+        intent.putExtra("fromNearby", isFromNearbySearch);
         startActivity(intent);
     }
 
