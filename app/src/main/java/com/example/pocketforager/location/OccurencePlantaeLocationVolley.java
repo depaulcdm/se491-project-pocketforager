@@ -3,6 +3,7 @@ package com.example.pocketforager.location;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.util.Log;
+import android.util.Pair;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -70,6 +71,7 @@ public class OccurencePlantaeLocationVolley {
                         try {
                             Log.d(TAG, "onResponse: " + response.toString());
                             ArrayList<LatLng> coordinates = new ArrayList<>();
+                            ArrayList<Pair<LatLng,String>> plantsNearList = new ArrayList<>();
                             JSONArray results = response.getJSONArray("results");
                             for (int i = 0; i < results.length(); i++) {
                                 JSONObject occurrence = results.getJSONObject(i);
@@ -77,14 +79,19 @@ public class OccurencePlantaeLocationVolley {
                                     double lat = occurrence.getDouble("decimalLatitude");
                                     double lon = occurrence.getDouble("decimalLongitude");
                                     String name = occurrence.optString("scientificName", "Unknown");
+
                                     Log.d(TAG, "Lat: " + lat + ", Lon: " + lon + ", Name: " + name);
                                     LatLng location = new LatLng(lat, lon);
                                     coordinates.add(location);
-                                    context.addMarkers(coordinates);
+                                    //context.addMarkers(coordinates);
+                                    //context.plantsNearList.add(new Pair<>(location,name));
+                                    plantsNearList.add(new Pair<>(location,name));
 
                                 }
 
                             }
+
+                            context.nearUserMarkers(plantsNearList);
 
 
 

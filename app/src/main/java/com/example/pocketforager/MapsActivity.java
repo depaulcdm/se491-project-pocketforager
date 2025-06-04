@@ -15,6 +15,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -55,7 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String TAG = "MAp Activity: ";
     private GBIFVolley gbifVolley = new GBIFVolley();
     private String common_name;
-
+    public ArrayList<Pair<LatLng,String>> plantsNearList = new ArrayList<>();
     private String urlImage = "";
 
     @Override
@@ -142,10 +143,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 TextView title = view.findViewById(R.id.plant_title);
                 TextView snippet = view.findViewById(R.id.marker_latlon);
                 ImageView image = view.findViewById(R.id.marker_image);
+                double tolerance = 0.0001;
 
 
                 if(common_name!= null && !common_name.isEmpty()){
                     title.setText(common_name);
+                }
+
+                else if(plantsNearList != null && !plantsNearList.isEmpty()){
+                    for(Pair<LatLng,String> entry: plantsNearList){
+                        if(isCloseEnough(position,entry.first,tolerance)){
+                            title.setText(entry.second);
+                            break;
+                        }
+                    }
                 }
 
 
@@ -170,7 +181,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                    binding.tvNoPhoto.setVisibility(View.VISIBLE);
 //                    binding.imagePlant.setImageDrawable(null);
                 }
-                title.setText(marker.getTitle());
+
                 snippet.setText("Latitude: " + position.latitude + "\nLongitude: " + position.longitude);
 
                 return view;
@@ -187,6 +198,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+    public boolean isCloseEnough(LatLng markerPosition, LatLng plantPosition, double threshold) {
+        return Math.abs(markerPosition.latitude - plantPosition.latitude) < threshold &&
+                Math.abs(markerPosition.longitude - plantPosition.longitude) < threshold;
+    }
 
 
     private boolean checkPermission() {
@@ -279,6 +294,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void addMarkers(ArrayList<LatLng> latlngs) {
+        List<MarkerOptions> markers = MapPinHelper.generateMarkers(latlngs);
+        for (MarkerOptions marker : markers) {
+            mMap.addMarker(marker);
+        }
+    }
+
+    public void nearUserMarkers(ArrayList<Pair<LatLng,String>> paired){
+        ArrayList <LatLng> latlngs = new ArrayList<>();
+        plantsNearList.addAll(paired);
+        String name = "";
+        for(Pair<LatLng,String> entry: paired){
+            latlngs.add(entry.first);
+            name = entry.second;
+            System.out.println(name);
+        }
+
         List<MarkerOptions> markers = MapPinHelper.generateMarkers(latlngs);
         for (MarkerOptions marker : markers) {
             mMap.addMarker(marker);
