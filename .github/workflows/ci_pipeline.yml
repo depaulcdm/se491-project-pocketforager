@@ -46,9 +46,15 @@ jobs:
       - name: Build without tests
         run: ./gradlew assembleDebug --no-daemon
 
-      - name: Run unit tests and generate coverage
+      - name: Run unit tests with coverage
         run: ./gradlew testDebugUnitTest jacocoTestReport --no-daemon
 
+      - name: JaCoCo HTML
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-html
+          path: app/build/reports/jacoco/jacocoTestReport/html
+          retention-days: 7
 
 
 
