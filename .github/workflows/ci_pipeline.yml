@@ -26,10 +26,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Create local.properties
-        run: |
-          echo "sdk.dir=$ANDROID_HOME" > local.properties
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          api-level: 34
+          build-tools: 34.0.0
 
+      - name: Create local.properties
+        run: echo "sdk.dir=$ANDROID_HOME" > local.properties
           
       - name: Cache Gradle packages
         uses: actions/cache@v3
