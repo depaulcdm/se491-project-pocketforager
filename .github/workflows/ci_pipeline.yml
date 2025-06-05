@@ -49,8 +49,9 @@ jobs:
       - name: Build without tests
         run: ./gradlew assembleDebug --no-daemon
 
-      - name: Tests and coverage
-        run: ./gradlew testDebugUnitTest jacocoTestReportDebug jacocoCoverageCheck --no-daemon
+      - name: Tests and coverage
+        run: ./gradlew :app:testDebugUnitTest :app:jacocoTestReportDebug :app:jacocoCoverageCheck --no-daemon
+
 
       - name: JaCoCo HTML
         uses: actions/upload-artifact@v4
