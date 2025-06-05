@@ -100,8 +100,8 @@ dependencies {
 
 jacoco { toolVersion = "0.8.12" }
 
-val unitTestJava   = "$buildDir/intermediates/javac/debugUnitTest/classes"
-val unitTestKotlin = "$buildDir/tmp/kotlin-classes/debugUnitTest"
+val debugJava   = "$buildDir/intermediates/javac/debug/classes"
+val debugKotlin = "$buildDir/tmp/kotlin-classes/debug"
 
 val fileFilter = listOf(
     "**/R.class", "**/R$*.class",
@@ -119,8 +119,8 @@ tasks.register<JacocoReport>("jacocoUnitTestReport") {
 
     classDirectories.setFrom(
         files(
-            fileTree(unitTestJava)   { exclude(fileFilter) },
-            fileTree(unitTestKotlin) { exclude(fileFilter) }
+            fileTree(debugJava)   { exclude(fileFilter) },
+            fileTree(debugKotlin) { exclude(fileFilter) }
         )
     )
     sourceDirectories.setFrom(files("src/main/java", "src/main/kotlin"))
