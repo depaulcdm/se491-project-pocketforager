@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
 
 
+
     private final ArrayList<Plants> plants;
 
     private final MainActivity mainActivity;
@@ -88,7 +89,9 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
                 p.setOtherName(other);
 
                 p.setImageURL(plant.getImageURL());
-                mainActivity.openDetails(p);
+
+                mainActivity.openDetails(p, true); //added a flag for search by location
+
             });
         }
     }
@@ -99,17 +102,10 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
     }
 
 
-    public void updateData(List<PlantEntity> newPlantEntities) {
-        this.plants.clear();
-        for (PlantEntity entity : newPlantEntities) {
-            this.plants.add(new Plants(
-                    entity.id,
-                    entity.commonName,
-                    List.of(entity.scientificName),  // wrap string in list
-                    List.of(entity.otherName),
-                    entity.imageUrl
-            ));
-        }
+    public void updatePlants(ArrayList<Plants> newPlants) {
+        this.Plants = newPlants;
+        this.Plants.clear();
+        this.Plants.addAll(newPlants);
         notifyDataSetChanged();
     }
 

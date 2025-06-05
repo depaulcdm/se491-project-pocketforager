@@ -43,16 +43,13 @@ jobs:
       - name: Giving permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+      - name: Build without tests
+        run: ./gradlew assembleDebug --no-daemon
 
-      - name: Clean  
-        run: ./gradlew clean
+      - name: Run unit tests and generate coverage
+        run: ./gradlew testDebugUnitTest jacocoTestReport --no-daemon
 
-      - name: Run unit tests
-        run: ./gradlew test --no-daemon
 
-        
 
 
 

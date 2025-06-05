@@ -14,6 +14,9 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pocketforager.location.Occurrence;
@@ -26,8 +29,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.pocketforager.databinding.ActivityMapsBinding;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +50,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<String> Science_names = new ArrayList<>();
     private String TAG = "MAp Activity: ";
     private GBIFVolley gbifVolley = new GBIFVolley();
+    private String common_name;
 
+    private String urlImage = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +79,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Intent intent = getIntent();
         ArrayList<String> receivedList = intent.getStringArrayListExtra("Science_Names");
 
+        String url = intent.getStringExtra("imageURL");
+        String name = intent.getStringExtra("NAME");
         if (receivedList != null) {
             for (String item : receivedList) {
                 Log.d("ReceivedItem", item);
                 Science_names.add(item);
             }
         }
+        if (url!= null && !url.isEmpty()){
+            urlImage = url;
+        }
 
+        if(name != null && !name.isEmpty()){
+            common_name = name;
+        }
         determineLocation();
 
     }
@@ -99,6 +115,52 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.animateCamera(CameraUpdateFactory.zoomTo(zoomDefault));
         mMap.setBuildingsEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null; // Use default frame
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                View view = getLayoutInflater().inflate(R.layout.pop_up_marker, null);
+                LatLng position = marker.getPosition();
+
+                TextView title = view.findViewById(R.id.plant_title);
+                TextView snippet = view.findViewById(R.id.marker_latlon);
+                ImageView image = view.findViewById(R.id.marker_image);
+
+
+                if(common_name!= null && !common_name.isEmpty()){
+                    title.setText(common_name);
+                }
+                if (urlImage != null && !urlImage.isEmpty()) {
+
+                    Picasso.get().load(urlImage).placeholder(R.drawable.photo_box_border_rounded).into(image, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            // image was found
+                            image.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+
+                        }
+                    });
+
+
+                } else {
+                    // if no url exists
+//                    binding.tvNoPhoto.setVisibility(View.VISIBLE);
+//                    binding.imagePlant.setImageDrawable(null);
+                }
+                //title.setText(marker.getTitle());
+                snippet.setText("Latitude: " + position.latitude + "\nLongitude: " + position.longitude);
+
+                return view;
+            }
+        });
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -176,5 +238,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.addMarker(marker);
         }
     }
+
+
+
 
 }
