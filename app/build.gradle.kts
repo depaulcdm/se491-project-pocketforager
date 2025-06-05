@@ -1,3 +1,6 @@
+import org.gradle.testing.jacoco.tasks.JacocoReport
+import org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
@@ -95,8 +98,18 @@ dependencies {
 
 }
 
+jacoco { toolVersion = "0.8.12" }
 
-tasks.register<JacocoReport>("jacocoTestReport") {
+val unitTestJava   = "$buildDir/intermediates/javac/debugUnitTest/classes"
+val unitTestKotlin = "$buildDir/tmp/kotlin-classes/debugUnitTest"
+
+val fileFilter = listOf(
+    "**/R.class", "**/R$*.class",
+    "**/BuildConfig.*", "**/Manifest*.*",
+    "**/*Test*.*", "android/**/*.*"
+)
+
+tasks.register<JacocoReport>("jacocoUnitTestReport") {
     dependsOn("testDebugUnitTest")
 
     reports {
@@ -104,44 +117,45 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         html.required.set(true)
     }
 
-    val fileFilter = listOf(
-        "**/R.class",
-        "**/R$*.class",
-        "**/BuildConfig.*",
-        "**/Manifest*.*",
-        "**/*Test*.*",
-        "android/**/*.*"
+    classDirectories.setFrom(
+        files(
+            fileTree(unitTestJava)   { exclude(fileFilter) },
+            fileTree(unitTestKotlin) { exclude(fileFilter) }
+        )
     )
-
-    val debugTree = fileTree("${buildDir}/tmp/kotlin-classes/debug") {
-        exclude(fileFilter)
-    }
-
-    val mainSrc = "${project.projectDir}/src/main/java"
-
-    sourceDirectories.setFrom(files(mainSrc))
-    classDirectories.setFrom(files(debugTree))
+    sourceDirectories.setFrom(files("src/main/java", "src/main/kotlin"))
     executionData.setFrom(
-        fileTree(buildDir) {
-            include("jacoco/testDebugUnitTest.exec")
-        }
+        fileTree(buildDir) { include("jacoco/testDebugUnitTest.exec") }
     )
+}
 
-    doLast {
-        val t = tasks.named("testDebugUnitTest").get() as Test
-        println("\n>>> expected JVM args:\n" + t.allJvmArgs.joinToString(" "))
+tasks.register<JacocoCoverageVerification>("jacocoCoverageCheck") {
+    dependsOn("jacocoUnitTestReport")
+
+    classDirectories.setFrom(tasks.named("jacocoUnitTestReport").map {
+        (it as JacocoReport).classDirectories
+    })
+    sourceDirectories.setFrom(tasks.named("jacocoUnitTestReport").map {
+        (it as JacocoReport).sourceDirectories
+    })
+    executionData.setFrom(tasks.named("jacocoUnitTestReport").map {
+        (it as JacocoReport).executionData
+    })
+
+    violationRules {
+        rule {
+            limit {
+                counter = "LINE"
+                value   = "COVEREDRATIO"
+                minimum = "0.80".toBigDecimal()
+            }
+        }
     }
 }
 
-jacoco { toolVersion = "0.8.12" }
+tasks.named("check") { dependsOn("jacocoCoverageCheck") }
 
 tasks.withType<Test>().configureEach {
     jvmArgs("--add-opens=java.base/jdk.internal.reflect=ALL-UNNAMED")
-    jacoco { excludes += "jdk.internal.*" }
-
-    testLogging {
-
-        events("PASSED", "FAILED", "SKIPPED")
-
-    }
+    testLogging { events("PASSED", "FAILED", "SKIPPED") }
 }
