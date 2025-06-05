@@ -56,7 +56,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-html
-          path: app/build/reports/jacoco/jacocoTestReport/html
+          path: app/build/reports/jacocoUnitTestReport/html
           retention-days: 7
 
 
