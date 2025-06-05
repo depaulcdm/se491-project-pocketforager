@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -150,11 +151,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 TextView title = view.findViewById(R.id.plant_title);
                 TextView snippet = view.findViewById(R.id.marker_latlon);
                 ImageView image = view.findViewById(R.id.marker_image);
+                TextView scientificName = view.findViewById(R.id.scientificname);
                 double tolerance = 0.0001;
 
 
                 if(common_name!= null && !common_name.isEmpty()){
                     title.setText(common_name);
+                    scientificName.setText("");
                 }
 
                 if (plantsNearList != null && !plantsNearList.isEmpty()) {
@@ -164,7 +167,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (isCloseEnough(position, entry.first, tolerance)) {
                             // Find the matching plant in curatedPlants by scientific name
                             String matchingUrl = "";
-                            String commonName = entry.second; // default to scientific name
+                            String commonName = entry.second;
 
 
                             for (PlantEntity plant : curatedPlants) {
@@ -172,6 +175,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 if (plant.getScientificName().equals(entry.second)) {
                                     matchingUrl = plant.getImageURL();
                                     commonName = plant.getCommonName();
+                                    scientificName.setText(plant.getScientificName());
                                     break;
                                 }
                             }
@@ -390,22 +394,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 new PlantEntity("Elderberry", "Sambucus spp.", "https://upload.wikimedia.org/wikipedia/commons/a/a9/Sambucus-berries.jpg", "", false),
                 new PlantEntity("Jerusalem artichoke", "Helianthus tuberosus", "https://perenual.com/storage/species_image/3400_helianthus_tuberosus/regular/jerusalem-artichoke-flower-bright-yellow-small-sunflower.jpg", "", true),
                 new PlantEntity("Serviceberry", "Amelanchier spp.", "https://herbalramble.wordpress.com/wp-content/uploads/2018/04/dscn5796-e1523516785715.jpg?w=1024&h=768", "", false),
-                new PlantEntity("Mayapple", "Podophyllum peltatum", "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Podophyllum_peltatum_Arkansas.jpg/1280px-Podophyllum_peltatum_Arkansas.jpg", "", false),
+                new PlantEntity("Mayapple", "Podophyllum peltatum L.", "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Podophyllum_peltatum_Arkansas.jpg/1280px-Podophyllum_peltatum_Arkansas.jpg", "", false),
                 new PlantEntity("Wild bergamot", "Monarda fistulosa L.", "https://perenual.com/storage/species_image/5242_monarda_fistulosa/regular/52232588250_bb9d806633_b.jpg", "", true),
                 new PlantEntity("Black Huckleberry", "Gaylussacia baccata", "https://perenual.com/storage/species_image/8430_gaylussacia_baccata/regular/32047720371_d9bab0e6c7_b.jpg", "", true),
                 new PlantEntity("Greenbrier", "Smilax pulverulenta", "https://wildfoods4wildlife.com/wp-content/uploads/2020/03/image1-1024x768.jpg", "", false),
                 new PlantEntity("Muscadine Grape", "Vitis rotundifolia", "https://upload.wikimedia.org/wikipedia/commons/8/8b/Vitis_rotundifolia.jpg", "", false),
                 new PlantEntity("Wild plum", "Prunus americana Marshall", "https://perenual.com/storage/species_image/6327_prunus_americana/regular/50368039726_6e3d13f4f8_b.jpg", "", true),
                 new PlantEntity("Chicory", "Cichorium intybus L.", "https://perenual.com/storage/species_image/1879_cichorium_intybus/regular/52347380770_908f5f52e9_b.jpg", "", true),
-                new PlantEntity("American Beech", "Fagus grandifolia", "https://mortonarb.org/app/uploads/2020/12/96574_ca_object_representations_media_23637_large-0x1920-c-default.jpg", "", false),
+                new PlantEntity("American Beech", "Fagus grandifolia Ehrh.", "https://mortonarb.org/app/uploads/2020/12/96574_ca_object_representations_media_23637_large-0x1920-c-default.jpg", "", false),
                 new PlantEntity("American Hazelnut", "Corylus americana", "https://www.illinoiswildflowers.info/trees/photos/am_hazelnut1.jpg", "", false),
-                new PlantEntity("Dandelion", "Taraxacum officinale", "https://upload.wikimedia.org/wikipedia/commons/4/4f/DandelionFlower.jpg", "", false),
-                new PlantEntity("Spicebush", "Lindera benzoin", "https://perenual.com/storage/species_image/4916_lindera_benzoin/regular/28007412598_ced3351efa_b.jpg", "", true),
+                new PlantEntity("Dandelion", "Taraxacum officinale Weber ex F.H.Wigg.", "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/DandelionFlower.jpg/960px-DandelionFlower.jpg", "", false),
+                new PlantEntity("Spicebush", "Lindera benzoin (L.) Blume", "https://perenual.com/storage/species_image/4916_lindera_benzoin/regular/28007412598_ced3351efa_b.jpg", "", true),
                 new PlantEntity("Cattail", "Typha spp.", "https://cdn.mos.cms.futurecdn.net/aJDYpLLYV4JxPfBU6YSEZT.jpg", "", false),
-                new PlantEntity("Scarlet strawberry", "Fragaria virginiana", "https://perenual.com/storage/species_image/3029_fragaria_virginiana/regular/9000977033_fc93917ef1_b.jpg", "", true),
+                new PlantEntity("Scarlet strawberry", "Fragaria virginiana Duchesne", "https://perenual.com/storage/species_image/3029_fragaria_virginiana/regular/9000977033_fc93917ef1_b.jpg", "", true),
                 new PlantEntity("Common Persimmon", "Diospyros virginiana", "https://perenual.com/storage/species_image/274_diospyros_virginiana/regular/49014714943_39e9d002d6_b.jpg", "American Persimmon, Eastern Persimmon", true),
-                new PlantEntity("Daylily", "Hemerocallis fulva", "https://www.easytogrowbulbs.com/cdn/shop/products/DaylilyAutumnRed_squareWeb_SHUT.jpg?v=1618954565", "", false),
-                new PlantEntity("Small White Leek", "Allium tricoccum", "https://perenual.com/storage/species_image/8892_allium_tricoccum/regular/52351847169_fed2da6e16_b.jpg", "Ramp, Wild Leek", true),
+                new PlantEntity("Daylily", "Hemerocallis fulva (L.) L.", "https://upload.wikimedia.org/wikipedia/commons/6/66/Hemerocallis_lilioasphodelus.jpg", "", false),
+                new PlantEntity("Small White Leek", "Allium tricoccum Aiton", "https://perenual.com/storage/species_image/8892_allium_tricoccum/regular/52351847169_fed2da6e16_b.jpg", "Ramp, Wild Leek", true),
                 new PlantEntity("American chestnut", "Castanea dentata", "https://perenual.com/storage/species_image/1710_castanea_dentata/regular/50331266137_77acd7616d_b.jpg", "Sweet Chestnut", true),
                 new PlantEntity("Blackberry", "Rubus fruticosus 'Chester'", "https://perenual.com/storage/species_image/6954_rubus_fruticosus_chester/regular/autumn-fruit-blackberry-healthy-fresh-delicious.jpg", "", true),
                 new PlantEntity("Black Raspberry", "Rubus occidentalis", "https://perenual.com/storage/species_image/8431_rubus_occidentalis/regular/35280453713_213b0ebab1_b.jpg", "", true),
@@ -413,6 +417,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         );
     }
 
+
+    public void openGoogleMaps (View view) {
+        if (mMap != null) {
+            LatLng currentLocation = mMap.getCameraPosition().target;
+            String uri = "http://maps.google.com/maps?q=" + currentLocation.latitude + "," + currentLocation.longitude;
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            intent.setPackage("com.google.android.apps.maps");
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Map is not ready yet", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
 }
