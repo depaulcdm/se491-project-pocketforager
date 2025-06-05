@@ -26,12 +26,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          api-level: 34
-          build-tools: 34.0.0
-
       - name: Create local.properties
         run: echo "sdk.dir=$ANDROID_HOME" > local.properties
           
@@ -52,13 +46,6 @@ jobs:
 
       - name: Run unit tests with coverage
         run: ./gradlew testDebugUnitTest jacocoTestReport --no-daemon
-
-      - name: JaCoCo HTML
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-html
-          path: app/build/reports/jacoco/jacocoTestReport/html
-          retention-days: 7
 
 
 
