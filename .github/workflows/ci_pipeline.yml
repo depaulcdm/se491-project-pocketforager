@@ -27,7 +27,8 @@ jobs:
           distribution: 'temurin'
 
       - name: Create local.properties
-        run: echo "sdk.dir=$ANDROID_HOME" > local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
           
       - name: Cache Gradle packages
         uses: actions/cache@v3
@@ -44,9 +45,8 @@ jobs:
       - name: Build without tests
         run: ./gradlew assembleDebug --no-daemon
 
-      - name: Run unit tests with coverage
+      - name: Run unit tests and generate coverage
         run: ./gradlew testDebugUnitTest jacocoTestReport --no-daemon
-
 
 
 
