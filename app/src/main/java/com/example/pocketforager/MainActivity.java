@@ -2,6 +2,8 @@ package com.example.pocketforager;
 
 import static androidx.core.content.ContentProviderCompat.requireContext;
 
+import static com.example.pocketforager.GetPlantDataVolley.downloadSinglePlant;
+
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -34,6 +36,8 @@ import com.example.pocketforager.data.PlantEntity;
 import com.example.pocketforager.location.OccurencePlantaeLocationVolley;
 import com.example.pocketforager.location.SearchByLocationFragment;
 import com.example.pocketforager.model.Plant;
+
+import java.util.Arrays;
 import java.util.List;
 import com.example.pocketforager.databinding.ActivityMainBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -66,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         //GetPlantDataVolley.fetchAllEdiblePlants(getApplicationContext());
 
@@ -103,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        //downloadAllCuratedPlants(this);
 
         binding.progressBar.setVisibility(View.VISIBLE);
         GetPlantDataVolley.downloadPlants(this, "");
@@ -199,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         GetPlantDataVolley.downloadPlants(this, searchQuery);
+        //GetPlantDataVolley.downloadSinglePlant(this, curatedPlant);
         binding.textView.setVisibility(View.GONE);
         binding.progressBar.setVisibility(View.GONE);
 
@@ -276,5 +283,46 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DetailsPageActivity.class);
         intent.putExtra(DetailsPageActivity.EXTRA_PLANT, modelPlant);
         startActivity(intent);
+    }
+
+    public static void downloadAllCuratedPlants(MainActivity mainActivity) {
+        for (PlantEntity plant : CuratedPlantList.PLANTS) {
+            downloadSinglePlant(mainActivity, plant);
+        }
+    }
+
+        public static class CuratedPlantList {
+            private static final List<PlantEntity> PLANTS = Arrays.asList(
+                    new PlantEntity("Blackberry", "Rubus fruticosus", "", "", true),
+                    new PlantEntity("Chicory", "Cichorium intybus", "", "", true),
+                    new PlantEntity("Dandelion", "Taraxacum officinale", "", "", true),
+                    new PlantEntity("Daylily", "Hemerocallis fulva", "", "", true),
+                    new PlantEntity("Huckleberry", "Gaylussacia baccata", "", "", true),
+                    new PlantEntity("Groundnut", "Apios americana", "", "", true),
+                    new PlantEntity("Sunchoke", "Helianthus tuberosus", "", "", true),
+                    new PlantEntity("Wild Sweet Potato", "Ipomoea pandurata", "", "", true),
+                    new PlantEntity("Blueberry", "Vaccinium spp.", "", "", true),
+                    new PlantEntity("Elderberry", "Sambucus spp.", "", "", true),
+                    new PlantEntity("Black Raspberry", "Rubus occidentalis", "", "", true),
+                    new PlantEntity("American Persimmon", "Diospyros virginiana", "", "", true),
+                    new PlantEntity("Muscadine Grape", "Vitis rotundifolia", "", "", true),
+                    new PlantEntity("Pawpaw", "Asimina triloba", "", "", true),
+                    new PlantEntity("Mayapple", "Podophyllum peltatum", "", "", true),
+                    new PlantEntity("Wild Strawberry", "Fragaria virginiana", "", "", true),
+                    new PlantEntity("American Hazelnut", "Corylus americana", "", "", true),
+                    new PlantEntity("American Chestnut", "Castanea dentata", "", "", true),
+                    new PlantEntity("American Beech", "Fagus grandifolia", "", "", true),
+                    new PlantEntity("American Plum", "Prunus americana", "", "", true),
+                    new PlantEntity("Wild Leek (Ramps)", "Allium tricoccum", "", "", true),
+                    new PlantEntity("Spicebush", "Lindera benzoin", "", "", true),
+                    new PlantEntity("Serviceberry", "Amelanchier spp.", "", "", true),
+                    new PlantEntity("Greenbrier", "Smilax spp.", "", "", true),
+                    new PlantEntity("Wild Onion", "Allium canadense", "", "", true),
+                    new PlantEntity("Wild Garlic", "Allium vineale", "", "", true),
+                    new PlantEntity("Cattail", "Typha spp.", "", "", true),
+                    new PlantEntity("Pokeweed", "Phytolacca americana", "", "", true),
+                    new PlantEntity("Jerusalem Artichoke", "Helianthus tuberosus", "", "", true),
+                    new PlantEntity("Wild Bergamot", "Monarda fistulosa", "", "", true)
+        );
     }
 }

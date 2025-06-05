@@ -28,6 +28,68 @@ public class GetPlantDataVolley {
 
     private static final int MAX_PAGE = 37;
 
+
+    public static void downloadSinglePlant(MainActivity mainActivity, PlantEntity curatedPlant) {
+        RequestQueue queue = Volley.newRequestQueue(mainActivity);
+
+        Uri.Builder buildURL = Uri.parse(url).buildUpon();
+        buildURL.appendQueryParameter("key", "sk-0vim681b5258c92e110289");
+        buildURL.appendQueryParameter("q", curatedPlant.getScientificName());
+        buildURL.appendQueryParameter("edible", "1");
+        String urlToUse = buildURL.build().toString();
+        Log.d(TAG, "URL: " + urlToUse);
+
+        Response.Listener<JSONObject> listener = response -> {
+            try {
+                handleSuccess(response.toString(), curatedPlant);
+            } catch (JSONException e) {
+                Log.d(TAG, "JSON parsing failed for: " + curatedPlant.getScientificName());
+            }
+        };
+
+        Response.ErrorListener error = err -> {
+            Log.d(TAG, "Request failed for: " + curatedPlant.getScientificName());
+        };
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlToUse, null, listener, error);
+        queue.add(jsonObjectRequest);
+    }
+
+
+    private static void handleSuccess(String responseText, PlantEntity curatedPlant) throws JSONException {
+        JSONObject response = new JSONObject(responseText);
+        JSONArray data = response.getJSONArray("data");
+
+        if (data.length() == 0) {
+            Log.d(TAG, "\"" + curatedPlant.getCommonName() + "\", \"" + curatedPlant.getScientificName() + "\", \"\", \"\", false");
+            return;
+        }
+
+        JSONObject jData = data.getJSONObject(0); // Only use the first result
+
+        String commonName = jData.optString("common_name", curatedPlant.getCommonName());
+
+        JSONArray scientificNameArray = jData.optJSONArray("scientific_name");
+        String scientificName = (scientificNameArray != null && scientificNameArray.length() > 0) ?
+                scientificNameArray.getString(0) : curatedPlant.getScientificName();
+
+        List<String> otherNames = new ArrayList<>();
+        if (!jData.isNull("other_name")) {
+            JSONArray otherNameArray = jData.getJSONArray("other_name");
+            for (int j = 0; j < otherNameArray.length(); j++) {
+                otherNames.add(otherNameArray.getString(j));
+            }
+        }
+
+        String originalUrl = "";
+        if (!jData.isNull("default_image")) {
+            JSONObject defaultImage = jData.getJSONObject("default_image");
+            originalUrl = defaultImage.optString("regular_url", "");
+        }
+
+        Log.d(TAG, "\"" + commonName + "\", \"" + scientificName + "\", \"" + originalUrl + "\", \"" + String.join(", ", otherNames) + "\", true");
+    }
+
     public static void downloadPlants(MainActivity mainActivity,String plantName){
 
         RequestQueue queue = Volley.newRequestQueue(mainActivity);

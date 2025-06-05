@@ -43,6 +43,18 @@ public class PlantEntity {
         this.edible = edible;
     }
 
+    public String getScientificName() {
+        return scientificName;
+    }
+
+    public String getCommonName() {
+        return commonName;
+    }
+
+    public String getImageURL() {
+        return imageUrl;
+    }
+
     // I'll add edibility status and more later on
 }
 
