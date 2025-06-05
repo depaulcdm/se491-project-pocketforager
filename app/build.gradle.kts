@@ -100,8 +100,10 @@ dependencies {
 
 jacoco { toolVersion = "0.8.12" }
 
-val debugJava   = "$buildDir/intermediates/javac/debug/classes"
-val debugKotlin = "$buildDir/tmp/kotlin-classes/debug"
+val debugJava   =
+    "$buildDir/intermediates/javac/debug/compileDebugJavaWithJavac/classes"
+val debugKotlin = "$buildDir/does/not/exist"
+
 
 val fileFilter = listOf(
     "**/R.class", "**/R$*.class",
@@ -158,4 +160,17 @@ tasks.named("check") { dependsOn("jacocoCoverageCheck") }
 tasks.withType<Test>().configureEach {
     jvmArgs("--add-opens=java.base/jdk.internal.reflect=ALL-UNNAMED")
     testLogging { events("PASSED", "FAILED", "SKIPPED") }
+}
+
+tasks.register("locateDebugClasses") {
+    doLast {
+        println("─── CLASS DIRECTORIES UNDER build/ ───")
+        fileTree(buildDir) {
+            include("**/*.class")
+        }.files
+            .map { it.parentFile }
+            .distinct()
+            .sortedBy { it.path }
+            .forEach { println(it.relativeTo(buildDir)) }
+    }
 }
