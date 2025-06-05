@@ -10,6 +10,10 @@ on:
     branches:
       - main
 
+concurrency:                 
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,7 +31,8 @@ jobs:
           distribution: 'temurin'
 
       - name: Create local.properties
-        run: echo "sdk.dir=$ANDROID_HOME" > local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
           
       - name: Cache Gradle packages
         uses: actions/cache@v3
@@ -44,9 +49,15 @@ jobs:
       - name: Build without tests
         run: ./gradlew assembleDebug --no-daemon
 
-      - name: Run unit tests with coverage
+      - name: Run unit tests and generate coverage
         run: ./gradlew testDebugUnitTest jacocoTestReport --no-daemon
 
+      - name: JaCoCo HTML
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-html
+          path: app/build/reports/jacoco/jacocoTestReport/html
+          retention-days: 7
 
 
 
