@@ -3,6 +3,7 @@ package com.example.pocketforager.location;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.util.Log;
+import android.util.Pair;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -11,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.pocketforager.MainActivity;
+import com.example.pocketforager.MapsActivity;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
@@ -27,7 +29,9 @@ public class OccurencePlantaeLocationVolley {
 
 
     private RequestQueue queue;
-    public void getPlantaeOccurrences(double centerLat, double centerLon, double radiusKm, int limit, MainActivity context) {
+    public void getPlantaeOccurrences(double centerLat, double centerLon, double radiusKm, int limit, MapsActivity context) {
+
+        ArrayList<String> names = new ArrayList<>();
 
         RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -67,6 +71,7 @@ public class OccurencePlantaeLocationVolley {
                         try {
                             Log.d(TAG, "onResponse: " + response.toString());
                             ArrayList<LatLng> coordinates = new ArrayList<>();
+                            ArrayList<Pair<LatLng,String>> plantsNearList = new ArrayList<>();
                             JSONArray results = response.getJSONArray("results");
                             for (int i = 0; i < results.length(); i++) {
                                 JSONObject occurrence = results.getJSONObject(i);
@@ -74,14 +79,21 @@ public class OccurencePlantaeLocationVolley {
                                     double lat = occurrence.getDouble("decimalLatitude");
                                     double lon = occurrence.getDouble("decimalLongitude");
                                     String name = occurrence.optString("scientificName", "Unknown");
+
                                     Log.d(TAG, "Lat: " + lat + ", Lon: " + lon + ", Name: " + name);
                                     LatLng location = new LatLng(lat, lon);
                                     coordinates.add(location);
-
+                                    //context.addMarkers(coordinates);
+                                    //context.plantsNearList.add(new Pair<>(location,name));
+                                    plantsNearList.add(new Pair<>(location,name));
 
                                 }
+
                             }
-                            //context.addMarkers(coordinates);
+
+                            context.nearUserMarkers(plantsNearList);
+
+
 
                         } catch (JSONException e) {
                             Log.e(TAG, "JSON parsing error: " + e.getMessage());
@@ -97,5 +109,10 @@ public class OccurencePlantaeLocationVolley {
         queue.add(jsonObjectRequest);
     }
 
+
+    public interface OccurrenceCallback {
+        void onResponse(ArrayList<String> names);
+        void onError(String errorMessage);
+    }
 
 }
