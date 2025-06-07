@@ -155,6 +155,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 double tolerance = 0.0001;
 
 
+
                 if(common_name!= null && !common_name.isEmpty()){
                     title.setText(common_name);
                     scientificName.setText("");
@@ -196,6 +197,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             break;
                         }
                     }
+
+
+                if(common_name!= null && !common_name.isEmpty()){
+                    title.setText(common_name);
                 }
 
 //                            for (PlantEntity plant : new CuratedPlantList().PLANTS) {
@@ -242,7 +247,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     image.setVisibility(View.VISIBLE);
                     Log.d(TAG, "getInfoContents: " + "No image URL found");
                 }
-
                 snippet.setText("Latitude: " + position.latitude + "\nLongitude: " + position.longitude);
 
                 return view;

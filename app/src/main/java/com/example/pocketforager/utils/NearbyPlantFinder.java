@@ -12,8 +12,8 @@ import com.example.pocketforager.data.AppDatabase;
 import com.example.pocketforager.data.PlantEntity;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -23,6 +23,8 @@ public class NearbyPlantFinder {
         void onResult(List<PlantEntity> plants);
         void onError(String error);
     }
+
+
 
     public static void findNearbyPlants(String cityState, Context context, NearbyPlantCallback callback) {
         try {
@@ -55,22 +57,49 @@ public class NearbyPlantFinder {
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                     response -> {
                         try {
+
+                            Log.d("GBIFResponse", response.toString());
+
                             JSONArray gbifResults = response.getJSONArray("results");
                             Set<String> gbifNames = new HashSet<>();
 
                             for (int i = 0; i < gbifResults.length(); i++) {
-                                String sciName = gbifResults.getJSONObject(i).optString("scientificName");
-                                if (!sciName.isEmpty()) gbifNames.add(sciName);
+
+                                JSONObject item = gbifResults.getJSONObject(i);
+
+                                String kingdom = item.optString("kingdom");
+                                if (!"Plantae".equalsIgnoreCase(kingdom)) continue;
+
+                                String rawName = item.optString("acceptedScientificName", item.optString("scientificName"));
+
+                                String[] parts = rawName.trim().split("\\s+");
+                                String cleanName = (parts.length >= 2) ? parts[0] + " " + parts[1] : rawName.trim();
+
+                                Log.d("GBIFName", "Accepted: " + cleanName);
+                                gbifNames.add(cleanName);
+
                             }
 
+
                             AppDatabase db = AppDatabase.getDatabase(context);
-                            List<PlantEntity> matchingPlants = db.plantDao().getEdiblePlantsInArea(new ArrayList<>(gbifNames));
-                            callback.onResult(matchingPlants);
+                            new Thread(() -> {
+                                List<PlantEntity> matchingPlants = db.plantDao().getEdiblePlantsInArea(new ArrayList<>(gbifNames));
+                                // not running on main thread because it causes error
+                                android.os.Handler mainHandler = new android.os.Handler(context.getMainLooper());
+                                mainHandler.post(() -> callback.onResult(matchingPlants));
+                            }).start();
+
+
                         } catch (Exception e) {
+                            Log.e("GBIFParsingError", "Error parsing GBIF JSON: " + e.getMessage());
                             callback.onError("Parse error: " + e.getMessage());
                         }
                     },
-                    error -> callback.onError("API error: " + error.getMessage())
+                    error -> {
+                                    Log.e("GBIFAPIError", "API error: " + error.getMessage());
+                                    callback.onError("API error: " + error.getMessage());
+                    }
+
             );
 
             queue.add(request);

@@ -42,6 +42,12 @@ public class DetailsPageActivity extends AppCompatActivity {
 
         Plant plant = (Plant) getIntent().getSerializableExtra(EXTRA_PLANT);
 
+        boolean fromNearby = getIntent().getBooleanExtra("fromNearby", false);
+        if (fromNearby) {
+            binding.tvEdible.setText("Edible: Yes");
+        }
+
+
         if (plant != null) {
 
             String url = plant.getImageURL();
@@ -126,13 +132,17 @@ public class DetailsPageActivity extends AppCompatActivity {
     public void acceptDetails(PlantDetails details){
         this.details = details;
         Log.d(TAG, "JSON download success");
-        if(details.isEdible_fruit() || details.isEdible_leaf()){
+
+        boolean fromNearby = getIntent().getBooleanExtra("fromNearby", false);
+        if (fromNearby) {
             binding.tvEdible.setText("Yes");
-        }
-        else{
+        } else if(details.isEdible_fruit() || details.isEdible_leaf()) {
+            binding.tvEdible.setText("Yes");
+        } else {
             binding.tvEdible.setText("No");
         }
     }
+
 
     public void failedDetails(){
         Log.d(TAG, "JSON failed for some reason");
