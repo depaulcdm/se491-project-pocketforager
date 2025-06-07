@@ -12,10 +12,12 @@ import com.example.pocketforager.location.LocationFragment;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.util.List;
+
 
 public class LocationUnitTest {
 

@@ -196,6 +196,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             break;
                         }
                     }
+
                 }
 
 //                            for (PlantEntity plant : new CuratedPlantList().PLANTS) {
@@ -242,6 +243,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     image.setVisibility(View.VISIBLE);
                     Log.d(TAG, "getInfoContents: " + "No image URL found");
                 }
+
+                //title.setText(marker.getTitle());
 
                 snippet.setText("Latitude: " + position.latitude + "\nLongitude: " + position.longitude);
 

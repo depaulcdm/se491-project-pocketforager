@@ -246,45 +246,4 @@ public class GetPlantDataVolley {
     }
 
 
-    public static void fetchEdiblePlants(Context context, AppDatabase db) {
-
-        final RequestQueue queue = Volley.newRequestQueue(context);
-        final String baseUrl = "https://perenual.com/api/v2/species-list?key=sk-0vim681b5258c92e110289&edible=1&hardiness=1-13&page=";
-
-
-        for (int page = 1; page <= MAX_PAGE; page++) {
-
-            String url = baseUrl + page;
-
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                    response -> {
-
-                        try {
-                            JSONArray plants = response.getJSONArray("data");
-
-                            for (int i = 0; i < plants.length(); i++) {
-
-                                JSONObject plant = plants.getJSONObject(i);
-
-                                String commonName = plant.optString("common_name");
-                                String scientificName = plant.optString("scientific_name");
-                                String imageUrl = plant.optString("default_image");
-                                String description = plant.optString("description", "");
-                                boolean edible = plant.optBoolean("edible", false);
-
-                                PlantEntity entity = new PlantEntity(commonName, scientificName, imageUrl, description, edible);
-                                // Save to local Room database
-                                new Thread(() -> db.plantDao().insertPlant(entity)).start();
-                            }
-                        } catch (JSONException e) {
-
-                            e.printStackTrace();
-                        }
-                    },
-                    error -> Log.e("API_ERROR", "Request failed: " + error.toString())
-            );
-
-            queue.add(request);
-        }
-    }
 }
