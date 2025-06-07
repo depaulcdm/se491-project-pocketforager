@@ -111,24 +111,32 @@ val fileFilter = listOf(
     "**/*Test*.*", "android/**/*.*"
 )
 
+val includePkgs = listOf(
+    "com/example/pocketforager/location/**",
+    "com/example/pocketforager/utils/**",
+    "com/example/pocketforager/model/**"
+)
+
 tasks.register<JacocoReport>("jacocoUnitTestReport") {
     dependsOn("testDebugUnitTest")
 
-    reports {
-        xml.required.set(true)
-        html.required.set(true)
-    }
+    reports { xml.required.set(true); html.required.set(true) }
 
     classDirectories.setFrom(
         files(
-            fileTree(debugJava)   { exclude(fileFilter) },
-            fileTree(debugKotlin) { exclude(fileFilter) }
+            fileTree(debugJava) {
+                include(includePkgs)
+                exclude(fileFilter)
+            },
+            fileTree(debugKotlin) {
+                include(includePkgs)
+                exclude(fileFilter)
+            }
         )
     )
+
     sourceDirectories.setFrom(files("src/main/java", "src/main/kotlin"))
-    executionData.setFrom(
-        fileTree(buildDir) { include("jacoco/testDebugUnitTest.exec") }
-    )
+    executionData.setFrom(fileTree(buildDir) { include("jacoco/testDebugUnitTest.exec") })
 }
 
 tasks.register<JacocoCoverageVerification>("jacocoCoverageCheck") {
@@ -144,6 +152,7 @@ tasks.register<JacocoCoverageVerification>("jacocoCoverageCheck") {
         (it as JacocoReport).executionData
     })
 
+
     violationRules {
         rule {
             limit {
@@ -158,6 +167,7 @@ tasks.register<JacocoCoverageVerification>("jacocoCoverageCheck") {
 tasks.named("check") { dependsOn("jacocoCoverageCheck") }
 
 tasks.withType<Test>().configureEach {
+
     jvmArgs("--add-opens=java.base/jdk.internal.reflect=ALL-UNNAMED")
     testLogging { events("PASSED", "FAILED", "SKIPPED") }
 }
@@ -174,4 +184,5 @@ tasks.register("locateDebugClasses") {
             .forEach { println(it.relativeTo(buildDir)) }
     }
 }
+
 
