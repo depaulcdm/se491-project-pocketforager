@@ -6,15 +6,20 @@ import com.android.volley.RequestQueue;
 import com.example.pocketforager.data.AppDatabase;
 import com.example.pocketforager.data.PlantDao;
 import com.example.pocketforager.data.PlantEntity;
+import com.example.pocketforager.location.Occurrence;
 import com.example.pocketforager.utils.NearbyPlantFinder;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+
 
 public class NearbyPlantFinderTest {
 
@@ -58,4 +63,5 @@ public class NearbyPlantFinderTest {
         mockCallback.onError(errorMessage);
         verify(mockCallback).onError(errorMessage);
     }
+
 }

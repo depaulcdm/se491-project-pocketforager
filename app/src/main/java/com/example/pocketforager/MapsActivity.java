@@ -13,7 +13,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,10 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.pocketforager.location.OccurencePlantaeLocationVolley;
 import com.example.pocketforager.location.OccurrenceCuratedListvolley;
-import com.example.pocketforager.location.Occurrence;
-import com.example.pocketforager.model.Plant;
 import com.example.pocketforager.utils.MapPinHelper;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
