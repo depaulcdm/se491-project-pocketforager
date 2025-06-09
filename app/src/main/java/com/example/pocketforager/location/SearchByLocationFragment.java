@@ -52,7 +52,8 @@ public class SearchByLocationFragment extends Fragment {
             }
 
             String query = city + ", " + state;
-            NearbyPlantFinder.findNearbyPlants(query, getContext(), new NearbyPlantFinder.NearbyPlantCallback() {
+            NearbyPlantFinder finder = NearbyPlantFinder.create(getContext());
+            finder.findNearbyPlants(query, new NearbyPlantFinder.NearbyPlantCallback() {
                 @Override
                 public void onResult(List<PlantEntity> plants) {
                     //adapter.updateData(plants);

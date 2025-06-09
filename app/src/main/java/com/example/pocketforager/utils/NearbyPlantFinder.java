@@ -24,11 +24,29 @@ public class NearbyPlantFinder {
         void onError(String error);
     }
 
+    private final Geocoder geocoder;
+    private final RequestQueue queue;
+    private final AppDatabase db;
+    private final Context context;
 
+    // Constructor for dependency injection
+    public NearbyPlantFinder(Context context, Geocoder geocoder, RequestQueue queue, AppDatabase db) {
+        this.context = context;
+        this.geocoder = geocoder;
+        this.queue = queue;
+        this.db = db;
+    }
 
-    public static void findNearbyPlants(String cityState, Context context, NearbyPlantCallback callback) {
+    // Static factory for production use
+    public static NearbyPlantFinder create(Context context) {
+        Geocoder geocoder = new Geocoder(context);
+        RequestQueue queue = Volley.newRequestQueue(context);
+        AppDatabase db = AppDatabase.getDatabase(context);
+        return new NearbyPlantFinder(context, geocoder, queue, db);
+    }
+
+    public void findNearbyPlants(String cityState, NearbyPlantCallback callback) {
         try {
-            Geocoder geocoder = new Geocoder(context);
             List<Address> results = geocoder.getFromLocationName(cityState, 1);
             if (results.isEmpty()) {
                 callback.onError("Location not found");
@@ -53,55 +71,37 @@ public class NearbyPlantFinder {
                     URLEncoder.encode(wktPolygon, "UTF-8") +
                     "&hasCoordinate=true&limit=100";
 
-            RequestQueue queue = Volley.newRequestQueue(context);
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                     response -> {
                         try {
-
                             Log.d("GBIFResponse", response.toString());
-
                             JSONArray gbifResults = response.getJSONArray("results");
                             Set<String> gbifNames = new HashSet<>();
-
                             for (int i = 0; i < gbifResults.length(); i++) {
-
                                 JSONObject item = gbifResults.getJSONObject(i);
-
                                 String kingdom = item.optString("kingdom");
                                 if (!"Plantae".equalsIgnoreCase(kingdom)) continue;
-
                                 String rawName = item.optString("acceptedScientificName", item.optString("scientificName"));
-
                                 String[] parts = rawName.trim().split("\\s+");
                                 String cleanName = (parts.length >= 2) ? parts[0] + " " + parts[1] : rawName.trim();
-
                                 Log.d("GBIFName", "Accepted: " + cleanName);
                                 gbifNames.add(cleanName);
-
                             }
-
-
-                            AppDatabase db = AppDatabase.getDatabase(context);
                             new Thread(() -> {
                                 List<PlantEntity> matchingPlants = db.plantDao().getEdiblePlantsInArea(new ArrayList<>(gbifNames));
-                                // not running on main thread because it causes error
                                 android.os.Handler mainHandler = new android.os.Handler(context.getMainLooper());
                                 mainHandler.post(() -> callback.onResult(matchingPlants));
                             }).start();
-
-
-                        } catch (Exception e) {
+                        } catch (JSONException e) {
                             Log.e("GBIFParsingError", "Error parsing GBIF JSON: " + e.getMessage());
                             callback.onError("Parse error: " + e.getMessage());
                         }
                     },
                     error -> {
-                                    Log.e("GBIFAPIError", "API error: " + error.getMessage());
-                                    callback.onError("API error: " + error.getMessage());
+                        Log.e("GBIFAPIError", "API error: " + error.getMessage());
+                        callback.onError("API error: " + error.getMessage());
                     }
-
             );
-
             queue.add(request);
         } catch (Exception e) {
             callback.onError("Geocoding error: " + e.getMessage());

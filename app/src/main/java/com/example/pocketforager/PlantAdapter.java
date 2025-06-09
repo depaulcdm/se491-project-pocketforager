@@ -109,6 +109,12 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantListHolder> {
         notifyDataSetChanged();
     }
 
+    public void updateData(List<Plants> newPlants) {
+        this.Plants.clear();
+        this.Plants.addAll(newPlants);
+        notifyDataSetChanged();
+    }
+
 
 }
 
