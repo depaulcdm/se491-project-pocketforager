@@ -18,7 +18,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 import java.util.Date;
 import java.util.List;
 
@@ -44,15 +43,12 @@ public class VisitLogTest {
 
     @Test
     public void testLogVisitInsertsCorrectData() {
-        PlantEntity entity = new PlantEntity();
+        PlantEntity entity = new PlantEntity("Mint", "Mentha", "https://example.com/mint.jpg", "", true);
         entity.plantApiId = "plant-001";
-        entity.commonName = "Mint";
-        entity.scientificName = "Mentha";
         entity.location = "Botanic Garden";
         entity.foundAt = new Date();
 
-        long id = plantDao.insertPlant(entity);
-        assertNotNull(id);
+        plantDao.insertPlant(entity);
 
         List<PlantEntity> visits = plantDao.getAllPlants();
         assertEquals(1, visits.size());

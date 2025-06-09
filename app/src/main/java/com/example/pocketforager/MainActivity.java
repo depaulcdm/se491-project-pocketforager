@@ -330,7 +330,8 @@ public class MainActivity extends AppCompatActivity {
 
         String formattedQuery = city + ", " + state;
 
-        NearbyPlantFinder.findNearbyPlants(formattedQuery, this, new NearbyPlantFinder.NearbyPlantCallback() {
+        NearbyPlantFinder finder = NearbyPlantFinder.create(this);
+        finder.findNearbyPlants(formattedQuery, new NearbyPlantFinder.NearbyPlantCallback() {
             @Override
             public void onResult(List<PlantEntity> plantEntities) {
                 Log.d("PocketForager", "NearbyPlantFinder returned " + plantEntities.size() + " results");
@@ -365,26 +366,16 @@ public class MainActivity extends AppCompatActivity {
 
                     Set<String> seenScientificNames = new HashSet<>();
                     ArrayList<Plants> uniquePlants = new ArrayList<>();
-
-                    for (Plants plant : converted) {
-                        List<String> sciNames = plant.getScientificName();
-                        if (!sciNames.isEmpty() && seenScientificNames.add(sciNames.get(0))) {
-                            uniquePlants.add(plant);
+                    for (Plants p : converted) {
+                        String sci = p.getScientificName().isEmpty() ? "" : p.getScientificName().get(0);
+                        if (!seenScientificNames.contains(sci)) {
+                            seenScientificNames.add(sci);
+                            uniquePlants.add(p);
                         }
                     }
-
-                    isSearching = true;
-                    binding.textView.setVisibility(View.GONE);
-
-                    mAdapter = new PlantAdapter(uniquePlants, MainActivity.this, false);
-                    binding.searchResults.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                    binding.searchResults.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
-
+                    plantAdapter.updateData(uniquePlants);
                 }
             }
-
-
 
             @Override
             public void onError(String error) {
