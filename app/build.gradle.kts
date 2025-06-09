@@ -96,6 +96,7 @@ dependencies {
     implementation (libs.picasso)
     implementation (libs.picasso.v271828)
 
+
 }
 
 jacoco { toolVersion = "0.8.12" }
