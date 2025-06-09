@@ -42,6 +42,7 @@ public class SearchByLocationFragment extends Fragment {
         resultsList.setLayoutManager(new LinearLayoutManager(getContext()));
         resultsList.setAdapter(adapter);
 
+
         searchButton.setOnClickListener(v -> {
             String city = cityInput.getText().toString().trim();
             String state = stateInput.getText().toString().trim().toUpperCase();
