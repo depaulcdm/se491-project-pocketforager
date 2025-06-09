@@ -32,7 +32,7 @@ public class LocationVolleyTest {
 
     @Test
     public void testParseResponse_callsOnSuccess() throws Exception {
-        // Simulate a JSON response with one Plantae occurrence
+
         String jsonResponse = "{ \"results\": [ { " +
                 "\"kingdom\": \"Plantae\", " +
                 "\"decimalLatitude\": 41.9, " +
@@ -49,8 +49,9 @@ public class LocationVolleyTest {
 
         List<Occurrence> occurrences = captor.getValue();
         assertEquals(1, occurrences.size());
-        assertEquals(41.9, occurrences.get(0).getLatitude());
-        assertEquals(-87.6, occurrences.get(0).getLongitude());
+        assertEquals(41.9, occurrences.get(0).getLatitude(), 0.0001);
+        assertEquals(-87.6, occurrences.get(0).getLongitude(), 0.0001);
+
     }
 
     @Test
