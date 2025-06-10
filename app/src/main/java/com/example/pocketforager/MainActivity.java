@@ -1,12 +1,5 @@
 package com.example.pocketforager;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
-
-import static com.example.pocketforager.GetPlantDataVolley.downloadSinglePlant;
-
-import static java.security.AccessController.getContext;
-
 
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
@@ -15,25 +8,19 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import android.content.Intent;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,12 +28,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pocketforager.data.AppDatabase;
 import com.example.pocketforager.data.PlantEntity;
-import com.example.pocketforager.location.OccurencePlantaeLocationVolley;
-import com.example.pocketforager.location.SearchByLocationFragment;
 import com.example.pocketforager.model.Plant;
 
-
-import java.util.Arrays;
 
 import java.util.HashSet;
 

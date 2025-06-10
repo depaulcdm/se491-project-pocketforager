@@ -33,7 +33,7 @@ public class OccurrenceCuratedListvolley {
 
 
 
-    public class CuratedPlantList {
+    public static class CuratedPlantList {
         public final List<PlantEntity> PLANTS = Arrays.asList(
                 new PlantEntity("Elderberry", "Sambucus spp.", "https://upload.wikimedia.org/wikipedia/commons/a/a9/Sambucus-berries.jpg", "", false),
                 new PlantEntity("Jerusalem artichoke", "Helianthus tuberosus", "https://perenual.com/storage/species_image/3400_helianthus_tuberosus/regular/jerusalem-artichoke-flower-bright-yellow-small-sunflower.jpg", "", true),
