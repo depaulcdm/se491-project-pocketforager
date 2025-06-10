@@ -123,7 +123,7 @@ tasks.register<JacocoReport>("jacocoUnitTestReport") {
 
     reports {
         xml.required.set(true); html.required.set(true)
-        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+
 
     }
 
