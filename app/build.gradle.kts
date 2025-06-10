@@ -90,7 +90,7 @@ dependencies {
     testImplementation ("org.mockito:mockito-core:4.+")
     testImplementation ("junit:junit:4.13.2")
     testImplementation ("org.json:json:20230227")
-
+    testImplementation ("org.robolectric:robolectric:4.10.3")
 
     // Picasso for showing plant picture in details page
     implementation (libs.picasso)
@@ -121,7 +121,11 @@ val includePkgs = listOf(
 tasks.register<JacocoReport>("jacocoUnitTestReport") {
     dependsOn("testDebugUnitTest")
 
-    reports { xml.required.set(true); html.required.set(true) }
+    reports {
+        xml.required.set(true); html.required.set(true)
+        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+
+    }
 
     classDirectories.setFrom(
         files(
